@@ -10,6 +10,7 @@
 
   <style>
     :root{
+      /* Site theme (dark, OptiGrid-ish) */
       --bg: #07121f;
       --bar: #0b1a2a;
       --card: rgba(255,255,255,0.06);
@@ -27,10 +28,18 @@
 
       --radius: 18px;
       --shadow: 0 18px 50px rgba(0,0,0,0.35);
+
+      /* PDF (white) palette */
+      --pdfBg: #ffffff;
+      --pdfText: #0b1220;
+      --pdfMuted: rgba(11,18,32,0.72);
+      --pdfCard: #ffffff;
+      --pdfCard2: #f4f6fb;
+      --pdfBorder: rgba(11,18,32,0.14);
+      --pdfShadow: 0 10px 26px rgba(0,0,0,0.08);
     }
 
     * { box-sizing: border-box; }
-
     body{
       margin: 0;
       font-family: Arial, sans-serif;
@@ -97,7 +106,7 @@
       padding: 18px 18px 56px;
     }
 
-    /* Export container */
+    /* Report container */
     #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -199,7 +208,6 @@
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
     .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
 
-    /* Buttons */
     .actions{
       margin-top: 12px;
       display: grid;
@@ -224,7 +232,6 @@
     }
     .btn-update:hover{ filter: brightness(1.04); }
 
-    /* This is now the PDF method button (print pipeline) */
     .btn-pdf{
       background: linear-gradient(180deg, var(--green), #2f6f52);
       box-shadow: 0 10px 26px rgba(62,143,106,0.22);
@@ -252,7 +259,6 @@
     }
     .result-line span{ font-weight: 900; }
 
-    /* Charts */
     .charts{
       display: grid;
       grid-template-columns: 1fr;
@@ -301,55 +307,90 @@
       flex-wrap: wrap;
     }
 
-    /* ----------------------------
-       PRINT / PDF (native print)
-       ---------------------------- */
+    /* -----------------------------------------
+       PDF MODE (white report, still same content)
+       ----------------------------------------- */
+    #report.pdfMode{
+      background: var(--pdfBg) !important;
+      border-color: var(--pdfBorder) !important;
+      box-shadow: var(--pdfShadow) !important;
+    }
+    #report.pdfMode .report-header{
+      background: #ffffff !important;
+      border-bottom-color: var(--pdfBorder) !important;
+    }
+    #report.pdfMode .report-header .h1{
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .report-header .snippet{
+      color: var(--pdfMuted) !important;
+    }
+    #report.pdfMode .card{
+      background: var(--pdfCard) !important;
+      border-color: var(--pdfBorder) !important;
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .card h2,
+    #report.pdfMode .chart-title,
+    #report.pdfMode label{
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .subtext{
+      color: var(--pdfMuted) !important;
+    }
+    #report.pdfMode input{
+      background: #ffffff !important;
+      color: var(--pdfText) !important;
+      border-color: var(--pdfBorder) !important;
+      box-shadow: none !important;
+    }
+    #report.pdfMode .info{
+      background: var(--pdfCard2) !important;
+      border-color: var(--pdfBorder) !important;
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .info li{
+      color: var(--pdfMuted) !important;
+    }
+    #report.pdfMode #roiResults{
+      background: #ffffff !important;
+      border-color: var(--pdfBorder) !important;
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .result-line{
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .notes li{
+      color: var(--pdfMuted) !important;
+    }
+    #report.pdfMode .footer-actions{
+      border-top-color: var(--pdfBorder) !important;
+    }
+    #report.pdfMode .fineprint{
+      color: rgba(11,18,32,0.55) !important;
+    }
+
+    /* Print rules (so ONLY the report prints, on white background) */
     @media print {
-      /* Critical: print backgrounds and colours */
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-
-      /* Hide the sticky site header and any non-report spacing */
-      .topbar { display: none !important; }
-
-      body {
-        background: var(--bg) !important;
+      body{
+        background: #ffffff !important;
         margin: 0 !important;
       }
-
-      .page {
-        max-width: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      /* Make report full width on paper and remove “screen-only” effects */
-      #report {
+      .topbar{ display:none !important; }
+      .page{ padding: 0 !important; max-width: none !important; }
+      #report{
         border-radius: 0 !important;
         box-shadow: none !important;
-        border: none !important;
-        background: var(--bg) !important;
       }
-
-      .content { padding: 14px !important; }
-
-      /* Keep cards from being split awkwardly */
       .card, .report-header, .chart-wrap {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
       }
-
-      /* Optional: slightly reduce chart height for nicer page flow */
-      .chart-wrap { height: 300px !important; }
-
-      /* Hide the button hover effects etc in print */
-      button { box-shadow: none !important; }
-
-      /* If you want the button not to appear in the PDF, uncomment this:
-         .btn-pdf { display:none !important; }
-      */
+      .btn-pdf{ display:none !important; } /* hide button in final PDF */
     }
   </style>
 </head>
@@ -473,11 +514,10 @@
         </div>
 
         <div class="footer-actions">
-          <!-- New approach: native print -->
-          <button class="btn-pdf" onclick="savePDF()">Save as PDF</button>
+          <button class="btn-pdf" onclick="savePDFWhite()">Download PDF</button>
           <div class="fineprint">
             <span>OptiGrid x Team 55 MIG</span>
-            <span>Use Print → Save as PDF</span>
+            <span>Exports in a clean white layout</span>
           </div>
         </div>
 
@@ -641,14 +681,29 @@
       }
     }
 
-    // New PDF approach: native print dialog (reliable formatting)
-    function savePDF() {
-      // Ensure charts are up to date just before printing
+    // WHITE PDF export (format-safe): toggle pdfMode + browser print
+    function savePDFWhite() {
+      const report = document.getElementById("report");
+
+      // Apply white PDF styling
+      report.classList.add("pdfMode");
+
+      // Redraw charts so legend/ticks contrast on white
+      // (doesn't change data/logic; just re-renders visuals)
       calculate();
 
-      // small delay so charts finish drawing
-      setTimeout(() => window.print(), 250);
+      // Print after a short delay to ensure charts repaint
+      setTimeout(() => {
+        window.print();
+      }, 300);
     }
+
+    // After print, revert to normal dark site
+    window.addEventListener("afterprint", () => {
+      const report = document.getElementById("report");
+      report.classList.remove("pdfMode");
+      calculate();
+    });
 
     window.addEventListener("load", () => calculate());
     window.addEventListener("resize", () => calculate());
