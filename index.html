@@ -13,16 +13,22 @@
 
   <style>
     :root{
-      /* OptiGrid-like dark theme */
+      /* OptiGrid-like dark look */
       --bg: #07121f;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.08);
+      --bar: #0b1a2a;
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.08);
       --border: rgba(255,255,255,0.12);
       --text: #e8eef9;
-      --muted: rgba(232,238,249,0.75);
+      --muted: rgba(232,238,249,0.72);
 
-      --blue: #2b77ff;         /* Update button */
-      --green: #3e8f6a;        /* matte green PDF button */
+      /* OptiGrid-ish accents */
+      --accentBlue: #2b77ff;     /* Update button */
+      --teal: #47b0d6;           /* OptiGrid-ish chart line */
+      --coral: #ff7a8a;          /* Market line */
+
+      /* Matte green PDF button */
+      --green: #3e8f6a;
       --greenHover: #347a5a;
 
       --radius: 18px;
@@ -30,77 +36,83 @@
     }
 
     * { box-sizing: border-box; }
-    body {
+    body{
       margin: 0;
       font-family: Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(43,119,255,0.18), transparent 55%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(62,143,106,0.15), transparent 60%),
-                  var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 18% 10%, rgba(43,119,255,0.18), transparent 55%),
+        radial-gradient(900px 500px at 80% 20%, rgba(62,143,106,0.15), transparent 60%),
+        var(--bg);
     }
 
-    /* Top header (website) */
-    .topbar {
+    /* Top bar (site + PDF look-alike) */
+    .topbar{
       position: sticky;
       top: 0;
       z-index: 20;
       backdrop-filter: blur(10px);
-      background: rgba(7,18,31,0.75);
+      background: rgba(11,26,42,0.78);
       border-bottom: 1px solid var(--border);
     }
-
-    .topbar-inner {
-      max-width: 1100px;
+    .topbar-inner{
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 14px 20px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 14px;
     }
-
-    .logo {
+    .brand{
       display: flex;
       align-items: center;
       gap: 12px;
       min-width: 0;
     }
-
-    .logo img {
+    .brand img{
       height: 26px;
       width: auto;
       display: block;
     }
-
-    .logo-title {
-      display: flex;
-      flex-direction: column;
+    .brand-text{
+      display: grid;
+      gap: 2px;
       min-width: 0;
     }
-
-    .logo-title strong {
+    .brand-text .title{
+      font-weight: 800;
       font-size: 13px;
       letter-spacing: 0.2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .logo-title span {
+    .brand-text .subtitle{
       font-size: 12px;
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 22px 20px 60px;
+    .tag{
+      font-size: 12px;
+      color: rgba(232,238,249,0.85);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
     }
 
-    /* Report container (also what PDF exports) */
-    #report {
+    .page{
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 18px 56px;
+    }
+
+    /* Exported container (PDF captures this whole element) */
+    #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
@@ -108,8 +120,8 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
     }
 
-    /* PDF header (inside report so it appears in PDF) */
-    .report-header {
+    /* PDF header block */
+    .report-header{
       display: flex;
       align-items: center;
       gap: 14px;
@@ -117,75 +129,71 @@
       background: rgba(255,255,255,0.03);
       border-bottom: 1px solid var(--border);
     }
-
-    .report-header img {
+    .report-header img{
       height: 30px;
       width: auto;
       display: block;
     }
-
-    .report-header .titles {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    .report-header .titles{
+      display: grid;
+      gap: 4px;
       min-width: 0;
     }
-
-    .report-header .titles .h1 {
+    .report-header .h1{
       margin: 0;
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.2px;
     }
-
-    .report-header .titles .h2 {
+    .report-header .h2{
       margin: 0;
       font-size: 12px;
       color: var(--muted);
     }
-
-    .content {
-      padding: 18px;
+    .report-header .snippet{
+      margin: 0;
+      font-size: 12.5px;
+      color: rgba(232,238,249,0.86);
+      max-width: 920px;
+      line-height: 1.4;
     }
 
-    .grid {
+    .content{ padding: 18px; }
+
+    .grid{
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
     }
-
-    @media (min-width: 900px) {
-      .grid { grid-template-columns: 1.05fr 0.95fr; }
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1.05fr 0.95fr; }
     }
 
-    .card {
+    .card{
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
-      background: var(--panel);
+      background: var(--card);
     }
-
-    .card h2 {
+    .card h2{
       margin: 0 0 10px 0;
       font-size: 15px;
       letter-spacing: 0.2px;
     }
-
-    .subtext {
+    .subtext{
       margin: 0 0 14px 0;
       color: var(--muted);
       font-size: 13px;
     }
 
-    .field { margin-bottom: 12px; }
-    label {
+    .field{ margin-bottom: 12px; }
+    label{
       display: block;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 13px;
       margin-bottom: 6px;
     }
-
-    input {
+    input{
       width: 100%;
       padding: 11px 12px;
       font-size: 15px;
@@ -195,62 +203,55 @@
       background: rgba(0,0,0,0.16);
       color: var(--text);
     }
-    input:focus {
+    input:focus{
       border-color: rgba(43,119,255,0.55);
       box-shadow: 0 0 0 4px rgba(43,119,255,0.15);
     }
 
-    .info {
-      background: var(--panel2);
+    .info{
+      background: var(--card2);
       border: 1px dashed rgba(255,255,255,0.16);
       border-radius: 14px;
       padding: 12px;
-      color: var(--text);
       font-size: 13px;
+      color: rgba(232,238,249,0.92);
     }
-    .info ul { margin: 8px 0 0 18px; padding: 0; }
-    .info li { margin: 6px 0; color: rgba(232,238,249,0.85); }
+    .info ul{ margin: 8px 0 0 18px; padding: 0; }
+    .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
 
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    /* Update button (full width, below ROI calculator on mobile + desktop) */
+    .actions{
       margin-top: 12px;
+      display: grid;
+      gap: 10px;
     }
-
-    button {
+    button{
       border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-weight: 800;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 14.5px;
+      font-weight: 900;
       cursor: pointer;
       transition: transform 0.05s ease, filter 0.15s ease, background 0.15s ease;
-      color: #ffffff;
+      color: #fff;
+      width: 100%;
     }
-    button:active { transform: translateY(1px); }
+    button:active{ transform: translateY(1px); }
 
-    /* Update (calculate) button */
-    .btn-update {
+    .btn-update{
       background: linear-gradient(180deg, rgba(43,119,255,1), rgba(25,90,210,1));
       box-shadow: 0 10px 24px rgba(43,119,255,0.25);
     }
-    .btn-update:hover { filter: brightness(1.04); }
+    .btn-update:hover{ filter: brightness(1.04); }
 
-    /* Download PDF button (bottom, matte green) */
-    .btn-pdf {
-      width: 100%;
+    .btn-pdf{
       background: linear-gradient(180deg, var(--green), #2f6f52);
       box-shadow: 0 10px 26px rgba(62,143,106,0.22);
-      padding: 14px 16px;
-      border-radius: 14px;
       font-size: 15px;
     }
-    .btn-pdf:hover { background: linear-gradient(180deg, var(--greenHover), #2a6248); }
+    .btn-pdf:hover{ background: linear-gradient(180deg, var(--greenHover), #2a6248); }
 
-    /* Results block */
-    #roiResults {
+    #roiResults{
       display: none;
       margin-top: 12px;
       padding: 12px;
@@ -258,66 +259,58 @@
       border: 1px solid var(--border);
       background: rgba(0,0,0,0.14);
     }
-    #roiResults h2 {
+    #roiResults h3{
       margin: 0 0 8px 0;
       font-size: 14px;
+      font-weight: 900;
     }
-    .result-line {
+    .result-line{
       margin: 6px 0;
       font-size: 13.5px;
       color: rgba(232,238,249,0.92);
     }
-    .result-line span { font-weight: 900; }
+    .result-line span{ font-weight: 900; }
 
     /* Charts */
-    .charts {
+    .charts{
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
       margin-top: 16px;
     }
-
-    .chart-block {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-
-    .chart-title {
+    .chart-title{
       margin: 0 0 10px 0;
       font-size: 13px;
       font-weight: 900;
       color: rgba(232,238,249,0.95);
     }
-
-    .chart-wrap {
+    .chart-wrap{
       position: relative;
       width: 100%;
-      height: 360px; /* key fix: chart fits properly */
+      height: 340px; /* mobile-friendly */
     }
-
-    @media (min-width: 900px) {
-      .chart-wrap { height: 380px; }
+    @media (min-width: 600px){
+      .chart-wrap{ height: 360px; }
     }
-
-    canvas {
+    @media (min-width: 900px){
+      .chart-wrap{ height: 380px; }
+    }
+    canvas{
       width: 100% !important;
       height: 100% !important;
       display: block;
     }
 
-    /* Notes */
-    .notes { page-break-inside: avoid; }
-    .notes h2 { margin: 0 0 8px 0; font-size: 14px; }
-    .notes ul { margin: 0 0 0 18px; padding: 0; }
-    .notes li { margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
+    .notes h2{ margin: 0 0 8px 0; font-size: 14px; }
+    .notes ul{ margin: 0 0 0 18px; padding: 0; }
+    .notes li{ margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
 
-    .footer-actions {
+    .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
     }
-
-    .fineprint {
+    .fineprint{
       margin-top: 10px;
       font-size: 12px;
       color: rgba(232,238,249,0.62);
@@ -330,36 +323,41 @@
 </head>
 
 <body>
-  <!-- Website header -->
+  <!-- Site header -->
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="logo">
+      <div class="brand">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
-        <div class="logo-title">
-          <strong>OptiGrid</strong>
-          <span>CO₂ Offset & ROI Calculator</span>
+        <div class="brand-text">
+          <div class="title">OptiGrid</div>
+          <div class="subtitle">CO₂ Offset & ROI Calculator</div>
         </div>
       </div>
+      <div class="tag">OptiGrid × Team 55 MIG</div>
     </div>
   </div>
 
   <div class="page">
-    <!-- Exported area -->
+    <!-- Everything inside #report is exported to PDF -->
     <div id="report">
       <div class="report-header">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="titles">
           <p class="h1">CO₂ Offset Calculator</p>
-          <p class="h2">Decarbonisation modelling + ROI & payback analysis</p>
+          <p class="h2">Decarbonisation modelling + ROI & payback analysis • OptiGrid × Team 55 MIG</p>
+          <p class="snippet">
+            This calculator provides an indicative view of emissions offset and payback outcomes for grid-connected battery deployment.
+            Results are intended for high-level comparison across battery counts and time horizons, based on the inputs and fixed factors shown.
+          </p>
         </div>
       </div>
 
       <div class="content">
         <div class="grid">
-          <!-- Inputs -->
+          <!-- Inputs (left) -->
           <div class="card">
             <h2>Inputs</h2>
-            <p class="subtext">After updating figures, press <strong>Update</strong>.</p>
+            <p class="subtext">Update the figures below to model different scenarios.</p>
 
             <div class="field">
               <label>Battery Capacity (MWh per battery)</label>
@@ -374,23 +372,12 @@
                 <li>Black Coal: 324 kg CO₂/MWh</li>
               </ul>
             </div>
-
-            <div class="btn-row">
-              <button class="btn-update" onclick="calculate()">Update</button>
-            </div>
-
-            <div id="roiResults">
-              <h2>ROI & Payback Analysis</h2>
-              <div class="result-line"><strong>Normal Payback Period:</strong> <span id="paybackNormal"></span> years</div>
-              <div class="result-line"><strong>Optimised Payback Period:</strong> <span id="paybackOptimised"></span> years</div>
-              <div class="result-line"><strong>ROI Improvement:</strong> <span id="roiImprovement"></span> %</div>
-            </div>
           </div>
 
-          <!-- ROI Inputs -->
+          <!-- ROI (right) -->
           <div class="card">
             <h2>ROI Calculator</h2>
-            <p class="subtext">Enter assumptions below, then press <strong>Update</strong> to refresh results.</p>
+            <p class="subtext">After updating figures, press <strong>Update</strong>.</p>
 
             <div class="field">
               <label>Project Cost ($)</label>
@@ -407,22 +394,29 @@
               <input type="number" id="revenueOptimised" value="180000" />
             </div>
 
-            <div class="info">
-              <strong>Tip:</strong> After updating figures, press <strong>Update</strong>.
+            <div class="actions">
+              <button class="btn-update" onclick="calculate()">Update</button>
+            </div>
+
+            <div id="roiResults">
+              <h3>ROI & Payback Analysis</h3>
+              <div class="result-line"><strong>Normal Payback Period:</strong> <span id="paybackNormal"></span> years</div>
+              <div class="result-line"><strong>Optimised Payback Period:</strong> <span id="paybackOptimised"></span> years</div>
+              <div class="result-line"><strong>ROI Improvement:</strong> <span id="roiImprovement"></span> %</div>
             </div>
           </div>
         </div>
 
         <!-- Charts -->
         <div class="charts">
-          <div class="card chart-block">
+          <div class="card">
             <p class="chart-title">Decarbonisation vs Number of Batteries</p>
             <div class="chart-wrap">
               <canvas id="batteryChart"></canvas>
             </div>
           </div>
 
-          <div class="card chart-block">
+          <div class="card">
             <p class="chart-title">Decarbonisation vs Time (Years) for 500 Batteries</p>
             <div class="chart-wrap">
               <canvas id="timeChart"></canvas>
@@ -452,21 +446,21 @@
           </div>
         </div>
 
-        <!-- Bottom PDF button -->
+        <!-- PDF download at bottom -->
         <div class="footer-actions">
           <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
-
           <div class="fineprint">
-            <span>OptiGrid — CO₂ Offset & ROI Calculator</span>
+            <span>OptiGrid × Team 55</span>
             <span>PDF generated in-browser</span>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
   <script>
-    // IMPORTANT: LOGIC / CALCULATIONS BELOW ARE NOT CHANGED.
+    // IMPORTANT: CALCULATION LOGIC / ARRAYS / CONSTANTS BELOW ARE UNCHANGED.
 
     function calculate() {
       const capacity = Number(document.getElementById("capacity").value);
@@ -486,40 +480,42 @@
       if (window.batteryChartInstance) window.batteryChartInstance.destroy();
       if (window.timeChartInstance) window.timeChartInstance.destroy();
 
-      // Shared chart styling to match OptiGrid dark theme (visual only, no math changes)
+      const isMobile = window.matchMedia("(max-width: 520px)").matches;
+
+      // Styling to resemble OptiGrid site chart cards (visual only)
       const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: "top",
+            position: isMobile ? "bottom" : "top",
             labels: {
               color: "rgba(232,238,249,0.9)",
-              boxWidth: 14,
-              boxHeight: 14,
-              padding: 18,
-              font: { size: 12, weight: "bold" }
+              boxWidth: 10,
+              boxHeight: 10,
+              padding: isMobile ? 12 : 18,
+              font: { size: isMobile ? 11 : 12, weight: "bold" }
             }
           },
-          tooltip: {
-            enabled: true
-          }
+          tooltip: { enabled: true }
         },
         scales: {
           x: {
-            ticks: { color: "rgba(232,238,249,0.85)", font: { size: 12 } },
+            ticks: { color: "rgba(232,238,249,0.85)", font: { size: isMobile ? 11 : 12 } },
             grid: { color: "rgba(255,255,255,0.08)" },
-            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: 14, weight: "bold" } }
+            border: { color: "rgba(255,255,255,0.12)" },
+            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: isMobile ? 12 : 14, weight: "bold" } }
           },
           y: {
-            ticks: { color: "rgba(232,238,249,0.85)", font: { size: 12 } },
+            ticks: { color: "rgba(232,238,249,0.85)", font: { size: isMobile ? 11 : 12 } },
             grid: { color: "rgba(255,255,255,0.08)" },
-            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: 14, weight: "bold" } }
+            border: { color: "rgba(255,255,255,0.12)" },
+            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: isMobile ? 12 : 14, weight: "bold" } }
           }
         },
         elements: {
           line: { borderWidth: 3, tension: 0.2 },
-          point: { radius: 4, hoverRadius: 6 }
+          point: { radius: isMobile ? 3 : 4, hoverRadius: isMobile ? 5 : 6 }
         }
       };
 
@@ -529,8 +525,29 @@
         data: {
           labels: batteryQuantities,
           datasets: [
-            { label: "Black Coal", data: blackBatteryData, borderColor: "blue", borderWidth: 2, fill: false, tension: 0.2 },
-            { label: "Brown Coal", data: brownBatteryData, borderColor: "orange", borderWidth: 2, fill: false, tension: 0.2 }
+            /* Only visual styling changed (colors), data and formulas unchanged */
+            {
+              label: "OptiGrid",
+              data: blackBatteryData,
+              borderColor: "rgba(71,176,214,1)",
+              backgroundColor: "rgba(71,176,214,0.12)",
+              pointBackgroundColor: "rgba(71,176,214,1)",
+              pointBorderColor: "rgba(255,255,255,0.2)",
+              borderWidth: 2,
+              fill: false,
+              tension: 0.2
+            },
+            {
+              label: "Market Average",
+              data: brownBatteryData,
+              borderColor: "rgba(255,122,138,1)",
+              backgroundColor: "rgba(255,122,138,0.12)",
+              pointBackgroundColor: "rgba(255,122,138,1)",
+              pointBorderColor: "rgba(255,255,255,0.2)",
+              borderWidth: 2,
+              fill: false,
+              tension: 0.2
+            }
           ]
         },
         options: {
@@ -549,8 +566,28 @@
         data: {
           labels: timeYears,
           datasets: [
-            { label: "Black Coal", data: blackTimeData, borderColor: "blue", borderWidth: 2, fill: false, tension: 0.2 },
-            { label: "Brown Coal", data: brownTimeData, borderColor: "orange", borderWidth: 2, fill: false, tension: 0.2 }
+            {
+              label: "OptiGrid",
+              data: blackTimeData,
+              borderColor: "rgba(71,176,214,1)",
+              backgroundColor: "rgba(71,176,214,0.12)",
+              pointBackgroundColor: "rgba(71,176,214,1)",
+              pointBorderColor: "rgba(255,255,255,0.2)",
+              borderWidth: 2,
+              fill: false,
+              tension: 0.2
+            },
+            {
+              label: "Market Average",
+              data: brownTimeData,
+              borderColor: "rgba(255,122,138,1)",
+              backgroundColor: "rgba(255,122,138,0.12)",
+              pointBackgroundColor: "rgba(255,122,138,1)",
+              pointBorderColor: "rgba(255,255,255,0.2)",
+              borderWidth: 2,
+              fill: false,
+              tension: 0.2
+            }
           ]
         },
         options: {
@@ -597,8 +634,8 @@
       }, 500);
     }
 
-    // Optional: draw once on load using defaults (no math changes)
     window.addEventListener("load", () => calculate());
+    window.addEventListener("resize", () => calculate());
   </script>
 </body>
 </html>
