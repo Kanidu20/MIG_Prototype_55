@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OptiGrid | Battery CO₂ Avoidance & ROI Calculator</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #0f172a;      /* slate-900 */
+      --muted: #475569;     /* slate-600 */
+      --border: #e2e8f0;    /* slate-200 */
+      --card: #ffffff;
+      --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+      --radius: 16px;
+
+      --brand-dark: #0b1220; /* deep navy for OptiGrid header bar */
+      --brand-accent: #2563eb; /* blue accent (UI only; calcs unchanged) */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    /* Page container */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Top site header (outside PDF) */
+    .site-topbar {
+      background: var(--brand-dark);
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .site-topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+    .brand .brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .brand .brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brand .brand-subtitle {
+      margin: 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .pill {
+      font-size: 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 999px;
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.06);
+      white-space: nowrap;
+    }
+
+    /* PDF/Report wrapper (this is what gets exported) */
+    #report {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* This header is INSIDE the report so it appears in the PDF */
+    .report-header {
+      background: var(--brand-dark);
+      color: #fff;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .report-header img {
+      height: 30px;
+      width: auto;
+      display: block;
+    }
+    .report-header .titles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .report-header .h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    .report-header .h2 {
+      margin: 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* Main content layout */
+    .content {
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: start;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+    }
+
+    .subtext {
+      margin: 0 0 14px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
+    }
+    input:focus {
+      border-color: rgba(37, 99, 235, 0.45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .info {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      color: #0f172a;
+      font-size: 13px;
+    }
+    .info ul { margin: 8px 0 0 18px; padding: 0; }
+    .info li { margin: 6px 0; color: #334155; }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      padding: 11px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 700;
+    }
+    button.primary {
+      border-color: rgba(37, 99, 235, 0.35);
+      background: rgba(37, 99, 235, 0.08);
+    }
+    button:hover { filter: brightness(0.98); }
+
+    /* Results block */
+    #roiResults {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+    #roiResults h2 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+    }
+    .result-line {
+      margin: 6px 0;
+      color: #0f172a;
+      font-size: 13.5px;
+    }
+    .result-line span {
+      font-weight: 800;
+    }
+
+    /* Charts section */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .chart-block {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .chart-title {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      width: 700px !important;
+      height: 420px !important;
+      max-width: 100%;
+    }
+
+    /* Notes */
+    .notes {
+      margin-top: 16px;
+      page-break-inside: avoid;
+    }
+    .notes h2 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+    }
+    .notes ul { margin: 0 0 0 18px; padding: 0; }
+    .notes li { margin: 6px 0; color: #334155; font-size: 13px; }
+
+    /* Report footer (appears in PDF) */
+    .report-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top bar (site only) -->
+  <div class="site-topbar">
+    <div class="site-topbar-inner">
+      <div class="brand">
+        <!-- OptiGrid logo (embedded). Source is OptiGrid official logo. -->
+        <img
+          alt="OptiGrid"
+          src="data:image/webp;base64,UklGRo6JAABXRUJQVlA4WAoAAAAQAAAADAYABgIAQUxQSMFMAA..." />
+        <div class="brand-text">
+          <p class="brand-title">OptiGrid</p>
+          <p class="brand-subtitle">Battery CO₂ Avoidance & ROI Calculator</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="pill">White background • Investor-ready export</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- Everything inside #report is exported to PDF -->
+    <div id="report">
+
+      <!-- PDF header with logo -->
+      <div class="report-header">
+        <img
+          alt="OptiGrid"
+          src="data:image/webp;base64,UklGRo6JAABXRUJQVlA4WAoAAAAQAAAADAYABgIAQUxQSMFMAA..." />
+        <div class="titles">
+          <p class="h1">Battery CO₂ Avoidance Calculator</p>
+          <p class="h2">Decarbonisation modelling and payback analysis (for internal/investor discussion)</p>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="grid">
+
+          <!-- Left: Inputs + fixed info -->
+          <div class="card">
+            <h2>Inputs</h2>
+            <p class="subtext">Enter assumptions below, then calculate to update charts and ROI metrics.</p>
+
+            <div class="field">
+              <label>Battery Capacity (MWh per battery)</label>
+              <input type="number" id="capacity" value="3.9" />
+            </div>
+
+            <div class="info">
+              <div><strong>Battery quantities analysed:</strong> 1, 250, 500, 750, 1000 batteries</div>
+              <div style="margin-top:8px;"><strong>Fixed Emission Factors:</strong></div>
+              <ul>
+                <li>Brown Coal: 336.6 kg CO₂/MWh</li>
+                <li>Black Coal: 324 kg CO₂/MWh</li>
+              </ul>
+            </div>
+
+            <div class="btn-row">
+              <button class="primary" onclick="calculate()">Calculate</button>
+              <button onclick="downloadPDF()">Download PDF</button>
+            </div>
+
+            <div id="roiResults">
+              <h2>ROI & Payback Analysis</h2>
+              <div class="result-line"><strong>Normal Payback Period:</strong> <span id="paybackNormal"></span> years</div>
+              <div class="result-line"><strong>Optimised Payback Period:</strong> <span id="paybackOptimised"></span> years</div>
+              <div class="result-line"><strong>ROI Improvement:</strong> <span id="roiImprovement"></span> %</div>
+            </div>
+          </div>
+
+          <!-- Right: ROI inputs -->
+          <div class="card">
+            <h2>ROI Calculator</h2>
+            <p class="subtext">Use your project assumptions to estimate payback and operational uplift.</p>
+
+            <div class="field">
+              <label>Project Cost ($)</label>
+              <input type="number" id="cost" value="1000000" />
+            </div>
+
+            <div class="field">
+              <label>Annual Revenue — Normal Operation ($/year)</label>
+              <input type="number" id="revenueNormal" value="120000" />
+            </div>
+
+            <div class="field">
+              <label>Annual Revenue — Optimised Operation ($/year)</label>
+              <input type="number" id="revenueOptimised" value="180000" />
+            </div>
+
+            <div class="info">
+              <strong>Note:</strong> ROI and payback calculations are shown after you press <em>Calculate</em>.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Charts -->
+        <div class="charts">
+
+          <div class="card chart-block">
+            <p class="chart-title">Decarbonisation vs Number of Batteries</p>
+            <canvas id="batteryChart"></canvas>
+          </div>
+
+          <div class="card chart-block">
+            <p class="chart-title">Decarbonisation vs Time (Years) for 500 Batteries</p>
+            <canvas id="timeChart"></canvas>
+          </div>
+
+          <div class="card notes">
+            <h2>Notes</h2>
+            <ul>
+              <li><strong>Formula used:</strong></li>
+              <li>CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
+              <li>
+                where:<br>
+                CE = Carbon Emission (tons/year)<br>
+                C = Battery Capacity<br>
+                EF = Black/Brown coal Emission Factor<br>
+                N<sub>years</sub> = Number of years<br>
+                N<sub>batteries</sub> = Number of batteries
+              </li>
+              <li><strong>ROI & Payback formulas:</strong></li>
+              <li>Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
+              <li>Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
+              <li>ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
+              <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
+              <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-footer">
+        <span>OptiGrid — Battery CO₂ Avoidance & ROI Calculator</span>
+        <span>Exported via in-browser PDF generator</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // IMPORTANT: CALCULATIONS AND LOGIC BELOW ARE UNCHANGED FROM YOUR ORIGINAL.
+
+    function calculate() {
+      const capacity = Number(document.getElementById("capacity").value);
+      const brownEF = 336.6;
+      const blackEF = 324;
+
+      const batteryQuantities = [1, 250, 500, 750, 1000];
+      const timeYears = [5, 10, 15, 20];
+      const fixedBatteryForTime = 500;
+
+      const blackBatteryData = batteryQuantities.map(b => (capacity * 365 * blackEF / 1000) * b);
+      const brownBatteryData = batteryQuantities.map(b => (capacity * 365 * brownEF / 1000) * b);
+
+      const blackTimeData = timeYears.map(t => (capacity * 365 * blackEF / 1000) * fixedBatteryForTime * t);
+      const brownTimeData = timeYears.map(t => (capacity * 365 * brownEF / 1000) * fixedBatteryForTime * t);
+
+      if (window.batteryChartInstance) window.batteryChartInstance.destroy();
+      if (window.timeChartInstance) window.timeChartInstance.destroy();
+
+      const ctxBattery = document.getElementById("batteryChart").getContext("2d");
+      window.batteryChartInstance = new Chart(ctxBattery, {
+        type: "line",
+        data: {
+          labels: batteryQuantities,
+          datasets: [
+            { label: "Black Coal", data: blackBatteryData, borderColor: "blue", borderWidth: 2, fill: false, tension: 0.2 },
+            { label: "Brown Coal", data: brownBatteryData, borderColor: "orange", borderWidth: 2, fill: false, tension: 0.2 }
+          ]
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          scales: {
+            x: { title: { display: true, text: "Number of Batteries", font: { size: 16 } } },
+            y: { title: { display: true, text: "Decarbonisation (tonnes/year)", font: { size: 16 } } }
+          }
+        }
+      });
+
+      const ctxTime = document.getElementById("timeChart").getContext("2d");
+      window.timeChartInstance = new Chart(ctxTime, {
+        type: "line",
+        data: {
+          labels: timeYears,
+          datasets: [
+            { label: "Black Coal", data: blackTimeData, borderColor: "blue", borderWidth: 2, fill: false, tension: 0.2 },
+            { label: "Brown Coal", data: brownTimeData, borderColor: "orange", borderWidth: 2, fill: false, tension: 0.2 }
+          ]
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          scales: {
+            x: { title: { display: true, text: "Time (Years)", font: { size: 16 } } },
+            y: { title: { display: true, text: "Decarbonisation (tonnes)", font: { size: 16 } } }
+          }
+        }
+      });
+
+      const cost = Number(document.getElementById("cost").value);
+      const revenueNormal = Number(document.getElementById("revenueNormal").value);
+      const revenueOptimised = Number(document.getElementById("revenueOptimised").value);
+
+      if (cost > 0 && revenueNormal > 0 && revenueOptimised > 0) {
+        const paybackNormal = cost / revenueNormal;
+        const paybackOptimised = cost / revenueOptimised;
+        const roiImprovement = (1 - paybackOptimised / paybackNormal) * 100;
+
+        document.getElementById("paybackNormal").innerText = paybackNormal.toFixed(2);
+        document.getElementById("paybackOptimised").innerText = paybackOptimised.toFixed(2);
+        document.getElementById("roiImprovement").innerText = roiImprovement.toFixed(1);
+
+        document.getElementById("roiResults").style.display = "block";
+      }
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById("report");
+
+      const opt = {
+        margin: [0.4, 0.4, 0.4, 0.4],
+        filename: 'battery_co2_report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+
+      setTimeout(() => {
+        html2pdf().set(opt).from(element).save();
+      }, 500);
+    }
+
+    // Optional: render charts on load using default values (does not change any calculations)
+    window.addEventListener("load", () => calculate());
+  </script>
+</body>
+</html>
