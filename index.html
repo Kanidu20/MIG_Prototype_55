@@ -22,7 +22,7 @@
       --text: #e8eef9;
       --muted: rgba(232,238,249,0.72);
 
-      /* OptiGrid-ish accents */
+      /* Accents */
       --accentBlue: #2b77ff;     /* Update button */
       --teal: #47b0d6;           /* OptiGrid-ish chart line */
       --coral: #ff7a8a;          /* Market line */
@@ -46,7 +46,7 @@
         var(--bg);
     }
 
-    /* Top bar (site + PDF look-alike) */
+    /* Top bar */
     .topbar{
       position: sticky;
       top: 0;
@@ -64,6 +64,7 @@
       justify-content: space-between;
       gap: 14px;
     }
+
     .brand{
       display: flex;
       align-items: center;
@@ -80,8 +81,10 @@
       gap: 2px;
       min-width: 0;
     }
+
+    /* Title line: includes OptiGrid x Team 55 MIG (no pill/circle) */
     .brand-text .title{
-      font-weight: 800;
+      font-weight: 900;
       font-size: 13px;
       letter-spacing: 0.2px;
       white-space: nowrap;
@@ -94,15 +97,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-    .tag{
-      font-size: 12px;
-      color: rgba(232,238,249,0.85);
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.06);
-      padding: 8px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
     }
 
     .page{
@@ -136,7 +130,7 @@
     }
     .report-header .titles{
       display: grid;
-      gap: 4px;
+      gap: 6px;
       min-width: 0;
     }
     .report-header .h1{
@@ -145,11 +139,7 @@
       font-weight: 900;
       letter-spacing: 0.2px;
     }
-    .report-header .h2{
-      margin: 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
+    /* Removed the “Decarbonisation modelling + ROI & payback analysis • ...” line */
     .report-header .snippet{
       margin: 0;
       font-size: 12.5px;
@@ -219,7 +209,7 @@
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
     .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
 
-    /* Update button (full width, below ROI calculator on mobile + desktop) */
+    /* Buttons */
     .actions{
       margin-top: 12px;
       display: grid;
@@ -329,11 +319,14 @@
       <div class="brand">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="brand-text">
-          <div class="title">OptiGrid</div>
+          <!-- Updated title text only (no circle/pill) -->
+          <div class="title">OptiGrid x Team 55 MIG</div>
           <div class="subtitle">CO₂ Offset & ROI Calculator</div>
         </div>
       </div>
-      <div class="tag">OptiGrid × Team 55 MIG</div>
+
+      <!-- Removed the circle/pill box entirely -->
+      <div></div>
     </div>
   </div>
 
@@ -344,10 +337,11 @@
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="titles">
           <p class="h1">CO₂ Offset Calculator</p>
-          <p class="h2">Decarbonisation modelling + ROI & payback analysis • OptiGrid × Team 55 MIG</p>
+
+          <!-- Short snippet under title (2–3 sentences) -->
           <p class="snippet">
             This calculator provides an indicative view of emissions offset and payback outcomes for grid-connected battery deployment.
-            Results are intended for high-level comparison across battery counts and time horizons, based on the inputs and fixed factors shown.
+            It is designed to compare scenarios across different battery quantities and time horizons using the inputs and fixed factors shown.
           </p>
         </div>
       </div>
@@ -450,7 +444,7 @@
         <div class="footer-actions">
           <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
           <div class="fineprint">
-            <span>OptiGrid × Team 55</span>
+            <span>OptiGrid x Team 55 MIG</span>
             <span>PDF generated in-browser</span>
           </div>
         </div>
@@ -525,7 +519,6 @@
         data: {
           labels: batteryQuantities,
           datasets: [
-            /* Only visual styling changed (colors), data and formulas unchanged */
             {
               label: "OptiGrid",
               data: blackBatteryData,
