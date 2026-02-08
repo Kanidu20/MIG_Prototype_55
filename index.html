@@ -8,9 +8,6 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- html2pdf -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
   <style>
     :root{
       --bg: #07121f;
@@ -44,7 +41,7 @@
         var(--bg);
     }
 
-    /* Sticky site header (NOT inside PDF export) */
+    /* Top bar */
     .topbar{
       position: sticky;
       top: 0;
@@ -62,7 +59,6 @@
       justify-content: space-between;
       gap: 14px;
     }
-
     .brand{
       display: flex;
       align-items: center;
@@ -101,18 +97,13 @@
       padding: 18px 18px 56px;
     }
 
-    /* Exported container (PDF captures this) */
+    /* Export container */
     #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
       background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
-    }
-
-    /* Used only during PDF render */
-    .pdf-export{
-      background: #07121f !important;
     }
 
     .report-header{
@@ -208,6 +199,7 @@
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
     .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
 
+    /* Buttons */
     .actions{
       margin-top: 12px;
       display: grid;
@@ -232,6 +224,7 @@
     }
     .btn-update:hover{ filter: brightness(1.04); }
 
+    /* This is now the PDF method button (print pipeline) */
     .btn-pdf{
       background: linear-gradient(180deg, var(--green), #2f6f52);
       box-shadow: 0 10px 26px rgba(62,143,106,0.22);
@@ -259,6 +252,7 @@
     }
     .result-line span{ font-weight: 900; }
 
+    /* Charts */
     .charts{
       display: grid;
       grid-template-columns: 1fr;
@@ -307,13 +301,55 @@
       flex-wrap: wrap;
     }
 
-    /* Make sure PDF export doesn't get weird offsets from sticky/positioning */
-    .pdf-clone-root {
-      position: static !important;
-      transform: none !important;
-      top: auto !important;
-      left: auto !important;
-      margin: 0 !important;
+    /* ----------------------------
+       PRINT / PDF (native print)
+       ---------------------------- */
+    @media print {
+      /* Critical: print backgrounds and colours */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Hide the sticky site header and any non-report spacing */
+      .topbar { display: none !important; }
+
+      body {
+        background: var(--bg) !important;
+        margin: 0 !important;
+      }
+
+      .page {
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* Make report full width on paper and remove “screen-only” effects */
+      #report {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: var(--bg) !important;
+      }
+
+      .content { padding: 14px !important; }
+
+      /* Keep cards from being split awkwardly */
+      .card, .report-header, .chart-wrap {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Optional: slightly reduce chart height for nicer page flow */
+      .chart-wrap { height: 300px !important; }
+
+      /* Hide the button hover effects etc in print */
+      button { box-shadow: none !important; }
+
+      /* If you want the button not to appear in the PDF, uncomment this:
+         .btn-pdf { display:none !important; }
+      */
     }
   </style>
 </head>
@@ -437,12 +473,14 @@
         </div>
 
         <div class="footer-actions">
-          <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
+          <!-- New approach: native print -->
+          <button class="btn-pdf" onclick="savePDF()">Save as PDF</button>
           <div class="fineprint">
             <span>OptiGrid x Team 55 MIG</span>
-            <span>PDF generated in-browser</span>
+            <span>Use Print → Save as PDF</span>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -603,54 +641,13 @@
       }
     }
 
-    async function downloadPDF() {
-      const report = document.getElementById("report");
+    // New PDF approach: native print dialog (reliable formatting)
+    function savePDF() {
+      // Ensure charts are up to date just before printing
+      calculate();
 
-      // Create a clean clone for PDF rendering (prevents the "blank first page" issue)
-      const clone = report.cloneNode(true);
-      clone.classList.add("pdf-export", "pdf-clone-root");
-      clone.style.boxShadow = "none";
-      clone.style.margin = "0";
-      clone.style.borderRadius = "0";
-
-      // Put clone in a hidden, fixed container at top-left
-      const holder = document.createElement("div");
-      holder.style.position = "fixed";
-      holder.style.left = "0";
-      holder.style.top = "0";
-      holder.style.width = report.getBoundingClientRect().width + "px";
-      holder.style.zIndex = "-1";
-      holder.style.opacity = "0";
-      holder.style.pointerEvents = "none";
-      holder.appendChild(clone);
-      document.body.appendChild(holder);
-
-      // Ensure canvases are drawn before export
-      // (we already draw on load/update, this just avoids timing issues)
-      await new Promise(r => setTimeout(r, 250));
-
-      const width = clone.getBoundingClientRect().width;
-
-      const opt = {
-        margin: [0.4, 0.4, 0.4, 0.4],
-        filename: "battery_co2_report.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: "#07121f",
-          scrollY: 0,
-          windowWidth: Math.ceil(width),
-          windowHeight: Math.ceil(clone.scrollHeight)
-        },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["css", "legacy"] }
-      };
-
-      await html2pdf().set(opt).from(clone).save();
-
-      // Clean up
-      document.body.removeChild(holder);
+      // small delay so charts finish drawing
+      setTimeout(() => window.print(), 250);
     }
 
     window.addEventListener("load", () => calculate());
