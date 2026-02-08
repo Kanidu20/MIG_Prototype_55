@@ -114,6 +114,11 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
     }
 
+    /* Ensure dark background renders in PDF */
+    .pdf-export{
+      background: #07121f !important;
+    }
+
     /* PDF header block */
     .report-header{
       display: flex;
@@ -139,7 +144,6 @@
       font-weight: 900;
       letter-spacing: 0.2px;
     }
-    /* Removed the “Decarbonisation modelling + ROI & payback analysis • ...” line */
     .report-header .snippet{
       margin: 0;
       font-size: 12.5px;
@@ -319,13 +323,10 @@
       <div class="brand">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="brand-text">
-          <!-- Updated title text only (no circle/pill) -->
           <div class="title">OptiGrid x Team 55 MIG</div>
           <div class="subtitle">CO₂ Offset & ROI Calculator</div>
         </div>
       </div>
-
-      <!-- Removed the circle/pill box entirely -->
       <div></div>
     </div>
   </div>
@@ -337,8 +338,6 @@
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="titles">
           <p class="h1">CO₂ Offset Calculator</p>
-
-          <!-- Short snippet under title (2–3 sentences) -->
           <p class="snippet">
             This calculator provides an indicative view of emissions offset and payback outcomes for grid-connected battery deployment.
             It is designed to compare scenarios across different battery quantities and time horizons using the inputs and fixed factors shown.
@@ -613,17 +612,26 @@
     function downloadPDF() {
       const element = document.getElementById("report");
 
+      /* Force dark background for PDF render (fixes white PDF issue) */
+      element.classList.add("pdf-export");
+
       const opt = {
         margin: [0.4, 0.4, 0.4, 0.4],
         filename: 'battery_co2_report.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#07121f"
+        },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
       setTimeout(() => {
-        html2pdf().set(opt).from(element).save();
+        html2pdf().set(opt).from(element).save().then(() => {
+          element.classList.remove("pdf-export");
+        });
       }, 500);
     }
 
