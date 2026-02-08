@@ -13,7 +13,6 @@
 
   <style>
     :root{
-      /* OptiGrid-like dark look */
       --bg: #07121f;
       --bar: #0b1a2a;
       --card: rgba(255,255,255,0.06);
@@ -22,12 +21,10 @@
       --text: #e8eef9;
       --muted: rgba(232,238,249,0.72);
 
-      /* Accents */
-      --accentBlue: #2b77ff;     /* Update button */
-      --teal: #47b0d6;           /* OptiGrid-ish chart line */
-      --coral: #ff7a8a;          /* Market line */
+      --accentBlue: #2b77ff;
+      --teal: #47b0d6;
+      --coral: #ff7a8a;
 
-      /* Matte green PDF button */
       --green: #3e8f6a;
       --greenHover: #347a5a;
 
@@ -36,6 +33,7 @@
     }
 
     * { box-sizing: border-box; }
+
     body{
       margin: 0;
       font-family: Arial, sans-serif;
@@ -46,7 +44,7 @@
         var(--bg);
     }
 
-    /* Top bar */
+    /* Sticky site header (NOT inside PDF export) */
     .topbar{
       position: sticky;
       top: 0;
@@ -81,8 +79,6 @@
       gap: 2px;
       min-width: 0;
     }
-
-    /* Title line: includes OptiGrid x Team 55 MIG (no pill/circle) */
     .brand-text .title{
       font-weight: 900;
       font-size: 13px;
@@ -105,7 +101,7 @@
       padding: 18px 18px 56px;
     }
 
-    /* Exported container (PDF captures this whole element) */
+    /* Exported container (PDF captures this) */
     #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -114,12 +110,11 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
     }
 
-    /* Ensure dark background renders in PDF */
+    /* Used only during PDF render */
     .pdf-export{
       background: #07121f !important;
     }
 
-    /* PDF header block */
     .report-header{
       display: flex;
       align-items: center;
@@ -213,7 +208,6 @@
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
     .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
 
-    /* Buttons */
     .actions{
       margin-top: 12px;
       display: grid;
@@ -265,7 +259,6 @@
     }
     .result-line span{ font-weight: 900; }
 
-    /* Charts */
     .charts{
       display: grid;
       grid-template-columns: 1fr;
@@ -281,7 +274,7 @@
     .chart-wrap{
       position: relative;
       width: 100%;
-      height: 340px; /* mobile-friendly */
+      height: 340px;
     }
     @media (min-width: 600px){
       .chart-wrap{ height: 360px; }
@@ -313,11 +306,19 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+
+    /* Make sure PDF export doesn't get weird offsets from sticky/positioning */
+    .pdf-clone-root {
+      position: static !important;
+      transform: none !important;
+      top: auto !important;
+      left: auto !important;
+      margin: 0 !important;
+    }
   </style>
 </head>
 
 <body>
-  <!-- Site header -->
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -332,7 +333,6 @@
   </div>
 
   <div class="page">
-    <!-- Everything inside #report is exported to PDF -->
     <div id="report">
       <div class="report-header">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
@@ -347,7 +347,6 @@
 
       <div class="content">
         <div class="grid">
-          <!-- Inputs (left) -->
           <div class="card">
             <h2>Inputs</h2>
             <p class="subtext">Update the figures below to model different scenarios.</p>
@@ -367,7 +366,6 @@
             </div>
           </div>
 
-          <!-- ROI (right) -->
           <div class="card">
             <h2>ROI Calculator</h2>
             <p class="subtext">After updating figures, press <strong>Update</strong>.</p>
@@ -400,7 +398,6 @@
           </div>
         </div>
 
-        <!-- Charts -->
         <div class="charts">
           <div class="card">
             <p class="chart-title">Decarbonisation vs Number of Batteries</p>
@@ -439,7 +436,6 @@
           </div>
         </div>
 
-        <!-- PDF download at bottom -->
         <div class="footer-actions">
           <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
           <div class="fineprint">
@@ -447,7 +443,6 @@
             <span>PDF generated in-browser</span>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -475,7 +470,6 @@
 
       const isMobile = window.matchMedia("(max-width: 520px)").matches;
 
-      // Styling to resemble OptiGrid site chart cards (visual only)
       const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -609,30 +603,54 @@
       }
     }
 
-    function downloadPDF() {
-      const element = document.getElementById("report");
+    async function downloadPDF() {
+      const report = document.getElementById("report");
 
-      /* Force dark background for PDF render (fixes white PDF issue) */
-      element.classList.add("pdf-export");
+      // Create a clean clone for PDF rendering (prevents the "blank first page" issue)
+      const clone = report.cloneNode(true);
+      clone.classList.add("pdf-export", "pdf-clone-root");
+      clone.style.boxShadow = "none";
+      clone.style.margin = "0";
+      clone.style.borderRadius = "0";
+
+      // Put clone in a hidden, fixed container at top-left
+      const holder = document.createElement("div");
+      holder.style.position = "fixed";
+      holder.style.left = "0";
+      holder.style.top = "0";
+      holder.style.width = report.getBoundingClientRect().width + "px";
+      holder.style.zIndex = "-1";
+      holder.style.opacity = "0";
+      holder.style.pointerEvents = "none";
+      holder.appendChild(clone);
+      document.body.appendChild(holder);
+
+      // Ensure canvases are drawn before export
+      // (we already draw on load/update, this just avoids timing issues)
+      await new Promise(r => setTimeout(r, 250));
+
+      const width = clone.getBoundingClientRect().width;
 
       const opt = {
         margin: [0.4, 0.4, 0.4, 0.4],
-        filename: 'battery_co2_report.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
+        filename: "battery_co2_report.pdf",
+        image: { type: "jpeg", quality: 0.98 },
         html2canvas: {
           scale: 2,
           useCORS: true,
-          backgroundColor: "#07121f"
+          backgroundColor: "#07121f",
+          scrollY: 0,
+          windowWidth: Math.ceil(width),
+          windowHeight: Math.ceil(clone.scrollHeight)
         },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"] }
       };
 
-      setTimeout(() => {
-        html2pdf().set(opt).from(element).save().then(() => {
-          element.classList.remove("pdf-export");
-        });
-      }, 500);
+      await html2pdf().set(opt).from(clone).save();
+
+      // Clean up
+      document.body.removeChild(holder);
     }
 
     window.addEventListener("load", () => calculate());
