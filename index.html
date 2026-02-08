@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OptiGrid | Battery CO₂ Avoidance & ROI Calculator</title>
+  <title>OptiGrid | CO₂ Offset & ROI Calculator</title>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,142 +13,139 @@
 
   <style>
     :root{
-      --bg: #ffffff;
-      --text: #0f172a;      /* slate-900 */
-      --muted: #475569;     /* slate-600 */
-      --border: #e2e8f0;    /* slate-200 */
-      --card: #ffffff;
-      --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
-      --radius: 16px;
+      /* OptiGrid-like dark theme */
+      --bg: #07121f;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.12);
+      --text: #e8eef9;
+      --muted: rgba(232,238,249,0.75);
 
-      --brand-dark: #0b1220; /* deep navy for OptiGrid header bar */
-      --brand-accent: #2563eb; /* blue accent (UI only; calcs unchanged) */
+      --blue: #2b77ff;         /* Update button */
+      --green: #3e8f6a;        /* matte green PDF button */
+      --greenHover: #347a5a;
+
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
     }
 
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
       font-family: Arial, sans-serif;
-      line-height: 1.45;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(43,119,255,0.18), transparent 55%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(62,143,106,0.15), transparent 60%),
+                  var(--bg);
+      color: var(--text);
     }
 
-    /* Page container */
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px;
+    /* Top header (website) */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(7,18,31,0.75);
+      border-bottom: 1px solid var(--border);
     }
 
-    /* Top site header (outside PDF) */
-    .site-topbar {
-      background: var(--brand-dark);
-      color: #fff;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .site-topbar-inner {
+    .topbar-inner {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 14px 24px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      gap: 14px;
     }
-    .brand {
+
+    .logo {
       display: flex;
       align-items: center;
       gap: 12px;
       min-width: 0;
     }
-    .brand img {
-      height: 28px;
+
+    .logo img {
+      height: 26px;
       width: auto;
       display: block;
     }
-    .brand .brand-text {
+
+    .logo-title {
       display: flex;
       flex-direction: column;
       min-width: 0;
     }
-    .brand .brand-title {
-      font-size: 14px;
-      font-weight: 700;
+
+    .logo-title strong {
+      font-size: 13px;
       letter-spacing: 0.2px;
-      margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-    .brand .brand-subtitle {
-      margin: 0;
-      font-size: 12px;
-      color: rgba(255,255,255,0.75);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .pill {
-      font-size: 12px;
-      padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 999px;
-      color: rgba(255,255,255,0.9);
-      background: rgba(255,255,255,0.06);
-      white-space: nowrap;
     }
 
-    /* PDF/Report wrapper (this is what gets exported) */
+    .logo-title span {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 20px 60px;
+    }
+
+    /* Report container (also what PDF exports) */
     #report {
-      background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
       overflow: hidden;
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
     }
 
-    /* This header is INSIDE the report so it appears in the PDF */
+    /* PDF header (inside report so it appears in PDF) */
     .report-header {
-      background: var(--brand-dark);
-      color: #fff;
-      padding: 18px 20px;
       display: flex;
       align-items: center;
       gap: 14px;
+      padding: 18px 18px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
     }
+
     .report-header img {
       height: 30px;
       width: auto;
       display: block;
     }
+
     .report-header .titles {
       display: flex;
       flex-direction: column;
       gap: 2px;
       min-width: 0;
     }
-    .report-header .h1 {
+
+    .report-header .titles .h1 {
       margin: 0;
       font-size: 18px;
       font-weight: 800;
       letter-spacing: 0.2px;
     }
-    .report-header .h2 {
+
+    .report-header .titles .h2 {
       margin: 0;
       font-size: 12px;
-      color: rgba(255,255,255,0.8);
+      color: var(--muted);
     }
 
-    /* Main content layout */
     .content {
-      padding: 20px;
+      padding: 18px;
     }
 
     .grid {
@@ -158,22 +155,19 @@
     }
 
     @media (min-width: 900px) {
-      .grid {
-        grid-template-columns: 1.05fr 0.95fr;
-        align-items: start;
-      }
+      .grid { grid-template-columns: 1.05fr 0.95fr; }
     }
 
     .card {
-      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 16px;
+      background: var(--panel);
     }
 
     .card h2 {
       margin: 0 0 10px 0;
-      font-size: 16px;
+      font-size: 15px;
       letter-spacing: 0.2px;
     }
 
@@ -183,85 +177,99 @@
       font-size: 13px;
     }
 
-    .field {
-      margin-bottom: 12px;
-    }
+    .field { margin-bottom: 12px; }
     label {
       display: block;
       font-weight: 700;
       font-size: 13px;
       margin-bottom: 6px;
     }
+
     input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 11px 12px;
       font-size: 15px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.14);
       border-radius: 12px;
       outline: none;
-      background: #fff;
+      background: rgba(0,0,0,0.16);
+      color: var(--text);
     }
     input:focus {
-      border-color: rgba(37, 99, 235, 0.45);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      border-color: rgba(43,119,255,0.55);
+      box-shadow: 0 0 0 4px rgba(43,119,255,0.15);
     }
 
     .info {
-      background: #f8fafc;
-      border: 1px dashed #cbd5e1;
-      border-radius: 12px;
+      background: var(--panel2);
+      border: 1px dashed rgba(255,255,255,0.16);
+      border-radius: 14px;
       padding: 12px;
-      color: #0f172a;
+      color: var(--text);
       font-size: 13px;
     }
     .info ul { margin: 8px 0 0 18px; padding: 0; }
-    .info li { margin: 6px 0; color: #334155; }
+    .info li { margin: 6px 0; color: rgba(232,238,249,0.85); }
 
     .btn-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      align-items: center;
       margin-top: 12px;
     }
 
     button {
-      padding: 11px 14px;
-      cursor: pointer;
-      font-size: 14px;
+      border: none;
       border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-weight: 700;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.05s ease, filter 0.15s ease, background 0.15s ease;
+      color: #ffffff;
     }
-    button.primary {
-      border-color: rgba(37, 99, 235, 0.35);
-      background: rgba(37, 99, 235, 0.08);
+    button:active { transform: translateY(1px); }
+
+    /* Update (calculate) button */
+    .btn-update {
+      background: linear-gradient(180deg, rgba(43,119,255,1), rgba(25,90,210,1));
+      box-shadow: 0 10px 24px rgba(43,119,255,0.25);
     }
-    button:hover { filter: brightness(0.98); }
+    .btn-update:hover { filter: brightness(1.04); }
+
+    /* Download PDF button (bottom, matte green) */
+    .btn-pdf {
+      width: 100%;
+      background: linear-gradient(180deg, var(--green), #2f6f52);
+      box-shadow: 0 10px 26px rgba(62,143,106,0.22);
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 15px;
+    }
+    .btn-pdf:hover { background: linear-gradient(180deg, var(--greenHover), #2a6248); }
 
     /* Results block */
     #roiResults {
       display: none;
       margin-top: 12px;
       padding: 12px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      background: #ffffff;
+      background: rgba(0,0,0,0.14);
     }
     #roiResults h2 {
       margin: 0 0 8px 0;
-      font-size: 15px;
+      font-size: 14px;
     }
     .result-line {
       margin: 6px 0;
-      color: #0f172a;
       font-size: 13.5px;
+      color: rgba(232,238,249,0.92);
     }
-    .result-line span {
-      font-weight: 800;
-    }
+    .result-line span { font-weight: 900; }
 
-    /* Charts section */
+    /* Charts */
     .charts {
       display: grid;
       grid-template-columns: 1fr;
@@ -276,37 +284,43 @@
 
     .chart-title {
       margin: 0 0 10px 0;
-      font-size: 14px;
-      font-weight: 800;
-      color: #0f172a;
+      font-size: 13px;
+      font-weight: 900;
+      color: rgba(232,238,249,0.95);
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 360px; /* key fix: chart fits properly */
+    }
+
+    @media (min-width: 900px) {
+      .chart-wrap { height: 380px; }
     }
 
     canvas {
+      width: 100% !important;
+      height: 100% !important;
       display: block;
-      margin: 0 auto;
-      width: 700px !important;
-      height: 420px !important;
-      max-width: 100%;
     }
 
     /* Notes */
-    .notes {
-      margin-top: 16px;
-      page-break-inside: avoid;
-    }
-    .notes h2 {
-      margin: 0 0 8px 0;
-      font-size: 15px;
-    }
+    .notes { page-break-inside: avoid; }
+    .notes h2 { margin: 0 0 8px 0; font-size: 14px; }
     .notes ul { margin: 0 0 0 18px; padding: 0; }
-    .notes li { margin: 6px 0; color: #334155; font-size: 13px; }
+    .notes li { margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
 
-    /* Report footer (appears in PDF) */
-    .report-footer {
-      padding: 12px 20px;
+    .footer-actions {
+      margin-top: 18px;
+      padding-top: 16px;
       border-top: 1px solid var(--border);
-      color: var(--muted);
+    }
+
+    .fineprint {
+      margin-top: 10px;
       font-size: 12px;
+      color: rgba(232,238,249,0.62);
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -316,49 +330,36 @@
 </head>
 
 <body>
-
-  <!-- Top bar (site only) -->
-  <div class="site-topbar">
-    <div class="site-topbar-inner">
-      <div class="brand">
-        <!-- OptiGrid logo (embedded). Source is OptiGrid official logo. -->
-        <img
-          alt="OptiGrid"
-          src="data:image/webp;base64,UklGRo6JAABXRUJQVlA4WAoAAAAQAAAADAYABgIAQUxQSMFMAA..." />
-        <div class="brand-text">
-          <p class="brand-title">OptiGrid</p>
-          <p class="brand-subtitle">Battery CO₂ Avoidance & ROI Calculator</p>
+  <!-- Website header -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">
+        <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
+        <div class="logo-title">
+          <strong>OptiGrid</strong>
+          <span>CO₂ Offset & ROI Calculator</span>
         </div>
-      </div>
-      <div class="top-actions">
-        <span class="pill">White background • Investor-ready export</span>
       </div>
     </div>
   </div>
 
   <div class="page">
-
-    <!-- Everything inside #report is exported to PDF -->
+    <!-- Exported area -->
     <div id="report">
-
-      <!-- PDF header with logo -->
       <div class="report-header">
-        <img
-          alt="OptiGrid"
-          src="data:image/webp;base64,UklGRo6JAABXRUJQVlA4WAoAAAAQAAAADAYABgIAQUxQSMFMAA..." />
+        <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="titles">
-          <p class="h1">Battery CO₂ Avoidance Calculator</p>
-          <p class="h2">Decarbonisation modelling and payback analysis (for internal/investor discussion)</p>
+          <p class="h1">CO₂ Offset Calculator</p>
+          <p class="h2">Decarbonisation modelling + ROI & payback analysis</p>
         </div>
       </div>
 
       <div class="content">
         <div class="grid">
-
-          <!-- Left: Inputs + fixed info -->
+          <!-- Inputs -->
           <div class="card">
             <h2>Inputs</h2>
-            <p class="subtext">Enter assumptions below, then calculate to update charts and ROI metrics.</p>
+            <p class="subtext">After updating figures, press <strong>Update</strong>.</p>
 
             <div class="field">
               <label>Battery Capacity (MWh per battery)</label>
@@ -375,8 +376,7 @@
             </div>
 
             <div class="btn-row">
-              <button class="primary" onclick="calculate()">Calculate</button>
-              <button onclick="downloadPDF()">Download PDF</button>
+              <button class="btn-update" onclick="calculate()">Update</button>
             </div>
 
             <div id="roiResults">
@@ -387,10 +387,10 @@
             </div>
           </div>
 
-          <!-- Right: ROI inputs -->
+          <!-- ROI Inputs -->
           <div class="card">
             <h2>ROI Calculator</h2>
-            <p class="subtext">Use your project assumptions to estimate payback and operational uplift.</p>
+            <p class="subtext">Enter assumptions below, then press <strong>Update</strong> to refresh results.</p>
 
             <div class="field">
               <label>Project Cost ($)</label>
@@ -408,23 +408,25 @@
             </div>
 
             <div class="info">
-              <strong>Note:</strong> ROI and payback calculations are shown after you press <em>Calculate</em>.
+              <strong>Tip:</strong> After updating figures, press <strong>Update</strong>.
             </div>
           </div>
-
         </div>
 
         <!-- Charts -->
         <div class="charts">
-
           <div class="card chart-block">
             <p class="chart-title">Decarbonisation vs Number of Batteries</p>
-            <canvas id="batteryChart"></canvas>
+            <div class="chart-wrap">
+              <canvas id="batteryChart"></canvas>
+            </div>
           </div>
 
           <div class="card chart-block">
             <p class="chart-title">Decarbonisation vs Time (Years) for 500 Batteries</p>
-            <canvas id="timeChart"></canvas>
+            <div class="chart-wrap">
+              <canvas id="timeChart"></canvas>
+            </div>
           </div>
 
           <div class="card notes">
@@ -449,18 +451,22 @@
             </ul>
           </div>
         </div>
-      </div>
 
-      <div class="report-footer">
-        <span>OptiGrid — Battery CO₂ Avoidance & ROI Calculator</span>
-        <span>Exported via in-browser PDF generator</span>
-      </div>
+        <!-- Bottom PDF button -->
+        <div class="footer-actions">
+          <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
 
+          <div class="fineprint">
+            <span>OptiGrid — CO₂ Offset & ROI Calculator</span>
+            <span>PDF generated in-browser</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // IMPORTANT: CALCULATIONS AND LOGIC BELOW ARE UNCHANGED FROM YOUR ORIGINAL.
+    // IMPORTANT: LOGIC / CALCULATIONS BELOW ARE NOT CHANGED.
 
     function calculate() {
       const capacity = Number(document.getElementById("capacity").value);
@@ -480,6 +486,43 @@
       if (window.batteryChartInstance) window.batteryChartInstance.destroy();
       if (window.timeChartInstance) window.timeChartInstance.destroy();
 
+      // Shared chart styling to match OptiGrid dark theme (visual only, no math changes)
+      const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "top",
+            labels: {
+              color: "rgba(232,238,249,0.9)",
+              boxWidth: 14,
+              boxHeight: 14,
+              padding: 18,
+              font: { size: 12, weight: "bold" }
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "rgba(232,238,249,0.85)", font: { size: 12 } },
+            grid: { color: "rgba(255,255,255,0.08)" },
+            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: 14, weight: "bold" } }
+          },
+          y: {
+            ticks: { color: "rgba(232,238,249,0.85)", font: { size: 12 } },
+            grid: { color: "rgba(255,255,255,0.08)" },
+            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: 14, weight: "bold" } }
+          }
+        },
+        elements: {
+          line: { borderWidth: 3, tension: 0.2 },
+          point: { radius: 4, hoverRadius: 6 }
+        }
+      };
+
       const ctxBattery = document.getElementById("batteryChart").getContext("2d");
       window.batteryChartInstance = new Chart(ctxBattery, {
         type: "line",
@@ -491,11 +534,11 @@
           ]
         },
         options: {
-          responsive: false,
-          maintainAspectRatio: false,
+          ...commonOptions,
           scales: {
-            x: { title: { display: true, text: "Number of Batteries", font: { size: 16 } } },
-            y: { title: { display: true, text: "Decarbonisation (tonnes/year)", font: { size: 16 } } }
+            ...commonOptions.scales,
+            x: { ...commonOptions.scales.x, title: { ...commonOptions.scales.x.title, text: "Number of Batteries" } },
+            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Decarbonisation (tonnes/year)" } }
           }
         }
       });
@@ -511,11 +554,11 @@
           ]
         },
         options: {
-          responsive: false,
-          maintainAspectRatio: false,
+          ...commonOptions,
           scales: {
-            x: { title: { display: true, text: "Time (Years)", font: { size: 16 } } },
-            y: { title: { display: true, text: "Decarbonisation (tonnes)", font: { size: 16 } } }
+            ...commonOptions.scales,
+            x: { ...commonOptions.scales.x, title: { ...commonOptions.scales.x.title, text: "Time (Years)" } },
+            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Decarbonisation (tonnes)" } }
           }
         }
       });
@@ -554,7 +597,7 @@
       }, 500);
     }
 
-    // Optional: render charts on load using default values (does not change any calculations)
+    // Optional: draw once on load using defaults (no math changes)
     window.addEventListener("load", () => calculate());
   </script>
 </body>
