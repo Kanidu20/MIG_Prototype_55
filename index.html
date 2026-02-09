@@ -10,22 +10,16 @@
 
   <style>
     :root{
-      /* ====== BRAND BLUES (keep consistent) ====== */
-      --brandBlue:  #0b2a4a;   /* top banner blue */
+      /* ====== BRAND BLUES ====== */
+      --brandBlue:  #0b2a4a;
       --brandBlue2: #0a2340;
 
-      --deepBlue:   #071c33;  /* report body blue */
+      --deepBlue:   #071c33;  /* page + report background now dark blue */
       --deepBlue2:  #06162a;
 
       /* ====== TEXT ====== */
       --textOnBlue: #ffffff;
       --mutedOnBlue: rgba(255,255,255,0.82);
-
-      /* ====== PAGE (outermost background = liquid glass) ====== */
-      --pageBg: #ffffff;
-      --pageGlass1: rgba(11,42,74,0.10);
-      --pageGlass2: rgba(245,158,11,0.08);
-      --pageGlass3: rgba(22,163,74,0.07);
 
       /* ====== PANELS ON BLUE ====== */
       --panel: rgba(255,255,255,0.06);
@@ -33,16 +27,23 @@
       --borderOnBlue: rgba(255,255,255,0.18);
 
       --radius: 18px;
-      --shadow: 0 18px 50px rgba(0,0,0,0.25);
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
 
-      /* ====== BUTTONS (liquid glass only) ====== */
+      /* ====== BUTTONS ====== */
       --orange: #f59e0b;
       --orange2:#d97706;
 
       --green:  #16a34a;
       --green2: #15803d;
 
-      /* ====== PDF ====== */
+      /* ====== INPUTS (NOW DARK TOO) ====== */
+      --inputBg: rgba(255,255,255,0.08);
+      --inputBgFocus: rgba(255,255,255,0.11);
+      --inputBorder: rgba(255,255,255,0.22);
+      --inputText: rgba(255,255,255,0.95);
+      --inputPlaceholder: rgba(255,255,255,0.55);
+
+      /* ====== PDF (keep white + black) ====== */
       --pdfBg: #ffffff;
       --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
@@ -51,19 +52,15 @@
 
     * { box-sizing: border-box; }
 
-    /* Outermost background = liquid glass look */
+    /* ✅ NEW: page background now dark blue */
     body{
       margin: 0;
       font-family: Arial, sans-serif;
-      background:
-        radial-gradient(1200px 700px at 15% 10%, var(--pageGlass1), transparent 55%),
-        radial-gradient(900px 520px at 85% 15%, var(--pageGlass2), transparent 58%),
-        radial-gradient(900px 520px at 70% 80%, var(--pageGlass3), transparent 55%),
-        var(--pageBg);
-      color: #111827;
+      background: linear-gradient(180deg, var(--deepBlue), var(--deepBlue2));
+      color: var(--textOnBlue);
     }
 
-    /* Top bar stays the same blue */
+    /* Top bar */
     .topbar{
       position: sticky;
       top: 0;
@@ -120,17 +117,17 @@
       padding: 18px 18px 56px;
     }
 
-    /* ✅ The main card stays BLUE (not grey) */
+    /* Report container stays dark blue */
     #report{
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
       border: 1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(180deg, var(--deepBlue), var(--deepBlue2));
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
       color: var(--textOnBlue);
     }
 
-    /* Header stays the same blue */
+    /* Header */
     .report-header{
       display: flex;
       align-items: center;
@@ -166,11 +163,7 @@
       text-align: center;
     }
 
-    /* Content area stays BLUE */
-    .content{
-      padding: 18px;
-      color: var(--textOnBlue);
-    }
+    .content{ padding: 18px; }
 
     .grid{
       display: grid;
@@ -181,7 +174,6 @@
       .grid{ grid-template-columns: 1.05fr 0.95fr; }
     }
 
-    /* Panels on blue (clean + subtle glass feel inside card) */
     .card{
       border: 1px solid var(--borderOnBlue);
       border-radius: 16px;
@@ -216,16 +208,23 @@
       color: rgba(255,255,255,0.92);
     }
 
-    /* Inputs stay white for readability */
+    /* ✅ NEW: inputs now dark too */
     input{
       width: 100%;
       padding: 11px 12px;
       font-size: 15px;
       border-radius: 12px;
       outline: none;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.95);
-      color: #111827;
+      border: 1px solid var(--inputBorder);
+      background: var(--inputBg);
+      color: var(--inputText);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    input::placeholder{ color: var(--inputPlaceholder); }
+    input:focus{
+      background: var(--inputBgFocus);
+      border-color: rgba(255,255,255,0.34);
     }
 
     .hint{
@@ -252,7 +251,6 @@
       gap: 10px;
     }
 
-    /* ✅ Buttons = liquid glass */
     button{
       width: 100%;
       border-radius: 14px;
@@ -279,7 +277,6 @@
     }
     .btn-pdf:hover{ filter: brightness(1.04); }
 
-    /* ROI results (numbers green) */
     #roiResults{
       display: none;
       margin-top: 12px;
@@ -307,7 +304,6 @@
       color: var(--green);
     }
 
-    /* Charts */
     .charts{
       display: grid;
       grid-template-columns: 1fr;
@@ -343,7 +339,6 @@
     @media (min-width: 900px){ .chart-wrap{ height: 380px; } }
     canvas{ width: 100% !important; height: 100% !important; display: block; }
 
-    /* Notes dropdown */
     details.notes{
       border: 1px solid rgba(255,255,255,0.16);
       border-radius: 16px;
@@ -410,9 +405,7 @@
       flex-wrap: wrap;
     }
 
-    /* ===================================================
-       PDF MODE: WHITE BACKGROUND + BLACK TEXT (ALL)
-       =================================================== */
+    /* =============== PDF MODE (unchanged behavior) =============== */
     #report.pdfMode{
       background: var(--pdfBg) !important;
       border-color: var(--pdfBorder) !important;
@@ -450,8 +443,9 @@
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
       box-shadow: none !important;
+      color: #000 !important;
     }
-    /* Hide buttons in PDF (as before) */
+    #report.pdfMode input::placeholder{ color: rgba(0,0,0,0.5) !important; }
     #report.pdfMode .btn-update,
     #report.pdfMode .btn-pdf{
       display: none !important;
@@ -503,7 +497,6 @@
 
       <div class="content">
         <div class="grid">
-          <!-- INPUTS -->
           <div class="card">
             <h2>Inputs</h2>
             <p class="subtext">
@@ -530,7 +523,6 @@
             </div>
           </div>
 
-          <!-- ROI -->
           <div class="card">
             <h2>ROI Calculator</h2>
             <p class="subtext">
@@ -656,7 +648,7 @@
       return document.getElementById("report").classList.contains("pdfMode");
     }
 
-    // On-screen (blue background) -> light axes; PDF -> black axes
+    // On-screen -> light axes; PDF -> black axes
     function getChartColors() {
       if (isPdfMode()) {
         return {
