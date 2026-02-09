@@ -12,12 +12,12 @@
     :root{
       /* Site theme (dark, OptiGrid-ish) */
       --bg: #07121f;
-      --bar: #0b1a2a;
-      --card: rgba(255,255,255,0.06);
-      --card2: rgba(255,255,255,0.08);
       --border: rgba(255,255,255,0.12);
       --text: #e8eef9;
       --muted: rgba(232,238,249,0.72);
+
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.08);
 
       --accentBlue: #2b77ff;
       --teal: #47b0d6;
@@ -50,7 +50,6 @@
         var(--bg);
     }
 
-    /* Top bar */
     .topbar{
       position: sticky;
       top: 0;
@@ -106,7 +105,6 @@
       padding: 18px 18px 56px;
     }
 
-    /* Report container */
     #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -192,10 +190,6 @@
       background: rgba(0,0,0,0.16);
       color: var(--text);
     }
-    input:focus{
-      border-color: rgba(43,119,255,0.55);
-      box-shadow: 0 0 0 4px rgba(43,119,255,0.15);
-    }
 
     .info{
       background: var(--card2);
@@ -230,14 +224,12 @@
       background: linear-gradient(180deg, rgba(43,119,255,1), rgba(25,90,210,1));
       box-shadow: 0 10px 24px rgba(43,119,255,0.25);
     }
-    .btn-update:hover{ filter: brightness(1.04); }
 
     .btn-pdf{
       background: linear-gradient(180deg, var(--green), #2f6f52);
       box-shadow: 0 10px 26px rgba(62,143,106,0.22);
       font-size: 15px;
     }
-    .btn-pdf:hover{ background: linear-gradient(180deg, var(--greenHover), #2a6248); }
 
     #roiResults{
       display: none;
@@ -288,28 +280,13 @@
       display: block;
     }
 
-    .notes h2{ margin: 0 0 8px 0; font-size: 14px; }
-    .notes ul{ margin: 0 0 0 18px; padding: 0; }
-    .notes li{ margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
-
     .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
     }
-    .fineprint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(232,238,249,0.62);
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
 
-    /* -----------------------------------------
-       PDF MODE (white report, still same content)
-       ----------------------------------------- */
+    /* -------- PDF MODE (white report) -------- */
     #report.pdfMode{
       background: var(--pdfBg) !important;
       border-color: var(--pdfBorder) !important;
@@ -319,12 +296,9 @@
       background: #ffffff !important;
       border-bottom-color: var(--pdfBorder) !important;
     }
-    #report.pdfMode .report-header .h1{
-      color: var(--pdfText) !important;
-    }
-    #report.pdfMode .report-header .snippet{
-      color: var(--pdfMuted) !important;
-    }
+    #report.pdfMode .report-header .h1{ color: var(--pdfText) !important; }
+    #report.pdfMode .report-header .snippet{ color: var(--pdfMuted) !important; }
+
     #report.pdfMode .card{
       background: var(--pdfCard) !important;
       border-color: var(--pdfBorder) !important;
@@ -335,62 +309,34 @@
     #report.pdfMode label{
       color: var(--pdfText) !important;
     }
-    #report.pdfMode .subtext{
-      color: var(--pdfMuted) !important;
-    }
+    #report.pdfMode .subtext{ color: var(--pdfMuted) !important; }
     #report.pdfMode input{
       background: #ffffff !important;
       color: var(--pdfText) !important;
       border-color: var(--pdfBorder) !important;
-      box-shadow: none !important;
     }
     #report.pdfMode .info{
       background: var(--pdfCard2) !important;
       border-color: var(--pdfBorder) !important;
       color: var(--pdfText) !important;
     }
-    #report.pdfMode .info li{
-      color: var(--pdfMuted) !important;
-    }
     #report.pdfMode #roiResults{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
       color: var(--pdfText) !important;
     }
-    #report.pdfMode .result-line{
-      color: var(--pdfText) !important;
-    }
-    #report.pdfMode .notes li{
-      color: var(--pdfMuted) !important;
-    }
-    #report.pdfMode .footer-actions{
-      border-top-color: var(--pdfBorder) !important;
-    }
-    #report.pdfMode .fineprint{
-      color: rgba(11,18,32,0.55) !important;
-    }
 
-    /* Print rules (so ONLY the report prints, on white background) */
+    /* Print rules */
     @media print {
-      * {
+      *{
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      body{
-        background: #ffffff !important;
-        margin: 0 !important;
-      }
+      body{ background:#fff !important; margin:0 !important; }
       .topbar{ display:none !important; }
-      .page{ padding: 0 !important; max-width: none !important; }
-      #report{
-        border-radius: 0 !important;
-        box-shadow: none !important;
-      }
-      .card, .report-header, .chart-wrap {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      .btn-pdf{ display:none !important; } /* hide button in final PDF */
+      .page{ padding:0 !important; max-width:none !important; }
+      #report{ border-radius:0 !important; box-shadow:none !important; }
+      .btn-pdf{ display:none !important; }
     }
   </style>
 </head>
@@ -489,44 +435,41 @@
               <canvas id="timeChart"></canvas>
             </div>
           </div>
-
-          <div class="card notes">
-            <h2>Notes</h2>
-            <ul>
-              <li><strong>Formula used:</strong></li>
-              <li>CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
-              <li>
-                where:<br>
-                CE = Carbon Emission (tons/year)<br>
-                C = Battery Capacity<br>
-                EF = Black/Brown coal Emission Factor<br>
-                N<sub>years</sub> = Number of years<br>
-                N<sub>batteries</sub> = Number of batteries
-              </li>
-              <li><strong>ROI & Payback formulas:</strong></li>
-              <li>Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
-              <li>Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
-              <li>ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
-              <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
-              <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
-            </ul>
-          </div>
         </div>
 
         <div class="footer-actions">
           <button class="btn-pdf" onclick="savePDFWhite()">Download PDF</button>
-          <div class="fineprint">
-            <span>OptiGrid x Team 55 MIG</span>
-            <span>Exports in a clean white layout</span>
-          </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <script>
     // IMPORTANT: CALCULATION LOGIC / ARRAYS / CONSTANTS BELOW ARE UNCHANGED.
+
+    function isPdfMode() {
+      return document.getElementById("report").classList.contains("pdfMode");
+    }
+
+    // Returns chart styling depending on mode (dark site vs white PDF)
+    function getChartColors() {
+      if (isPdfMode()) {
+        return {
+          tick: "rgba(0,0,0,1)",              // axis numbers = black
+          title: "rgba(0,0,0,1)",             // axis titles = black
+          grid: "rgba(0,0,0,0.12)",           // grid lines = light grey
+          border: "rgba(0,0,0,0.35)",         // axis border = darker grey
+          legend: "rgba(0,0,0,1)"             // legend text = black
+        };
+      }
+      return {
+        tick: "rgba(232,238,249,0.85)",
+        title: "rgba(232,238,249,0.9)",
+        grid: "rgba(255,255,255,0.08)",
+        border: "rgba(255,255,255,0.12)",
+        legend: "rgba(232,238,249,0.9)"
+      };
+    }
 
     function calculate() {
       const capacity = Number(document.getElementById("capacity").value);
@@ -547,6 +490,7 @@
       if (window.timeChartInstance) window.timeChartInstance.destroy();
 
       const isMobile = window.matchMedia("(max-width: 520px)").matches;
+      const c = getChartColors();
 
       const commonOptions = {
         responsive: true,
@@ -555,7 +499,7 @@
           legend: {
             position: isMobile ? "bottom" : "top",
             labels: {
-              color: "rgba(232,238,249,0.9)",
+              color: c.legend,
               boxWidth: 10,
               boxHeight: 10,
               padding: isMobile ? 12 : 18,
@@ -566,16 +510,16 @@
         },
         scales: {
           x: {
-            ticks: { color: "rgba(232,238,249,0.85)", font: { size: isMobile ? 11 : 12 } },
-            grid: { color: "rgba(255,255,255,0.08)" },
-            border: { color: "rgba(255,255,255,0.12)" },
-            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: isMobile ? 12 : 14, weight: "bold" } }
+            ticks: { color: c.tick, font: { size: isMobile ? 11 : 12 } },
+            grid: { color: c.grid },
+            border: { color: c.border },
+            title: { display: true, color: c.title, font: { size: isMobile ? 12 : 14, weight: "bold" } }
           },
           y: {
-            ticks: { color: "rgba(232,238,249,0.85)", font: { size: isMobile ? 11 : 12 } },
-            grid: { color: "rgba(255,255,255,0.08)" },
-            border: { color: "rgba(255,255,255,0.12)" },
-            title: { display: true, color: "rgba(232,238,249,0.9)", font: { size: isMobile ? 12 : 14, weight: "bold" } }
+            ticks: { color: c.tick, font: { size: isMobile ? 11 : 12 } },
+            grid: { color: c.grid },
+            border: { color: c.border },
+            title: { display: true, color: c.title, font: { size: isMobile ? 12 : 14, weight: "bold" } }
           }
         },
         elements: {
@@ -594,9 +538,7 @@
               label: "OptiGrid",
               data: blackBatteryData,
               borderColor: "rgba(71,176,214,1)",
-              backgroundColor: "rgba(71,176,214,0.12)",
               pointBackgroundColor: "rgba(71,176,214,1)",
-              pointBorderColor: "rgba(255,255,255,0.2)",
               borderWidth: 2,
               fill: false,
               tension: 0.2
@@ -605,9 +547,7 @@
               label: "Market Average",
               data: brownBatteryData,
               borderColor: "rgba(255,122,138,1)",
-              backgroundColor: "rgba(255,122,138,0.12)",
               pointBackgroundColor: "rgba(255,122,138,1)",
-              pointBorderColor: "rgba(255,255,255,0.2)",
               borderWidth: 2,
               fill: false,
               tension: 0.2
@@ -634,9 +574,7 @@
               label: "OptiGrid",
               data: blackTimeData,
               borderColor: "rgba(71,176,214,1)",
-              backgroundColor: "rgba(71,176,214,0.12)",
               pointBackgroundColor: "rgba(71,176,214,1)",
-              pointBorderColor: "rgba(255,255,255,0.2)",
               borderWidth: 2,
               fill: false,
               tension: 0.2
@@ -645,9 +583,7 @@
               label: "Market Average",
               data: brownTimeData,
               borderColor: "rgba(255,122,138,1)",
-              backgroundColor: "rgba(255,122,138,0.12)",
               pointBackgroundColor: "rgba(255,122,138,1)",
-              pointBorderColor: "rgba(255,255,255,0.2)",
               borderWidth: 2,
               fill: false,
               tension: 0.2
@@ -681,24 +617,17 @@
       }
     }
 
-    // WHITE PDF export (format-safe): toggle pdfMode + browser print
+    // White PDF export: apply pdfMode + re-render charts with black axes + print
     function savePDFWhite() {
       const report = document.getElementById("report");
-
-      // Apply white PDF styling
       report.classList.add("pdfMode");
 
-      // Redraw charts so legend/ticks contrast on white
-      // (doesn't change data/logic; just re-renders visuals)
+      // Re-render charts so axes/labels become black for PDF
       calculate();
 
-      // Print after a short delay to ensure charts repaint
-      setTimeout(() => {
-        window.print();
-      }, 300);
+      setTimeout(() => window.print(), 300);
     }
 
-    // After print, revert to normal dark site
     window.addEventListener("afterprint", () => {
       const report = document.getElementById("report");
       report.classList.remove("pdfMode");
