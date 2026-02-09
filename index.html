@@ -48,10 +48,7 @@
       --coalBrownLine: rgba(255,122,138,1);  /* coral/pink */
 
       /* Greens for ROI pie */
-      --g1: #dcfce7;
-      --g2: #86efac;
       --g3: #22c55e;
-      --g4: #16a34a;
       --g5: #14532d;
 
       --radius: 18px;
@@ -144,13 +141,6 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.00));
       border-bottom: 1px solid rgba(255,255,255,0.12);
     }
-    .hero{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
     .hero-left{
       width: 100%;
       display:flex;
@@ -167,7 +157,7 @@
       font-weight: 900;
       letter-spacing: 0.2px;
       width:100%;
-      text-align:center; /* ✅ centered title */
+      text-align:center;
     }
     .hero p{
       margin: 8px auto 0 auto;
@@ -214,7 +204,7 @@
       .input-grid{ grid-template-columns: 1fr 1fr; }
     }
 
-    /* ✅ Inputs stacked within each card */
+    /* Inputs stacked */
     .inputs{
       display:grid;
       grid-template-columns: 1fr;
@@ -279,12 +269,10 @@
       accent-color: #60a5fa;
     }
 
-    /* ✅ Submit button full-width across one line */
-    .submit-row{
-      margin-top: 14px;
-    }
+    /* Submit full width */
+    .submit-row{ margin-top: 14px; }
 
-    /* ✅ Liquid-glass buttons */
+    /* Liquid-glass buttons */
     button{
       width:100%;
       border-radius: 14px;
@@ -301,12 +289,10 @@
         inset 0 1px 0 rgba(255,255,255,0.24);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-
       transition: transform 0.05s ease, filter 0.15s ease;
     }
     button:active{ transform: translateY(1px); }
 
-    /* matte blue look on top of glass */
     .btn-submit{
       background:
         linear-gradient(180deg, var(--btnBlueA), var(--btnBlueB)),
@@ -315,7 +301,6 @@
     }
     .btn-submit:hover{ filter: brightness(1.05); }
 
-    /* ✅ Save as PDF at bottom + green */
     .btn-pdf{
       background:
         linear-gradient(180deg, var(--btnGreenA), var(--btnGreenB)),
@@ -346,17 +331,16 @@
       color: rgba(255,255,255,0.90);
       font-size: 13.5px;
     }
+    /* ✅ bigger green numbers */
     .result-line span{
       font-weight: 900;
       color: var(--goodGreen);
+      font-size: 16.5px;
     }
 
-    /* Sections */
-    .section{
-      margin-top: 16px;
-    }
+    .section{ margin-top: 16px; }
 
-    /* ✅ Pie charts: 3 in a row on desktop, stacked on mobile */
+    /* Pie charts: 3 across on desktop */
     .pie-grid{
       display:grid;
       grid-template-columns: 1fr;
@@ -388,6 +372,20 @@
       line-height: 1.55;
       font-size: 13.5px;
     }
+
+    /* ✅ extra explanation under pies */
+    .coal-diff{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+      font-size: 13.5px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .coal-diff strong{ color: rgba(255,255,255,0.95); }
 
     .canvas-wrap{
       position:relative;
@@ -476,7 +474,11 @@
       box-shadow: var(--pdfShadow) !important;
       color: var(--pdfText) !important;
     }
+    /* Make most text black in PDF... */
     #report.pdfMode, #report.pdfMode *{ color: var(--pdfText) !important; }
+    /* ...but keep the ROI numbers green (and readable) */
+    #report.pdfMode .result-line span{ color: #16a34a !important; }
+
     #report.pdfMode .report-header{
       background:#ffffff !important;
       border-bottom-color: var(--pdfBorder) !important;
@@ -499,7 +501,7 @@
       background:#ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
-    /* Keep buttons hidden in PDF export */
+    /* Hide buttons in PDF */
     #report.pdfMode button{ display:none !important; }
 
     @media print{
@@ -530,15 +532,13 @@
   <div class="page">
     <div id="report">
       <div class="report-header">
-        <div class="hero">
-          <div class="hero-left">
-            <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
-            <h1>CO₂ Offset & ROI Calculator</h1>
-            <p>
-              Enter your values and press <strong>Submit</strong>. You’ll get an indicative view of (1) annual offset share (pie charts),
-              (2) ROI/payback change, and (3) scale + time trend charts.
-            </p>
-          </div>
+        <div class="hero-left">
+          <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
+          <h1>CO₂ Offset & ROI Calculator</h1>
+          <p>
+            Enter your values and press <strong>Submit</strong>. You’ll get an indicative view of (1) annual offset share (pie charts),
+            (2) ROI/payback change, and (3) scale + time trend charts.
+          </p>
         </div>
       </div>
 
@@ -610,18 +610,17 @@
           </div>
         </div>
 
-        <!-- ✅ Submit full-width below both cards -->
+        <!-- Submit -->
         <div class="submit-row">
           <button class="btn-submit" id="submitBtn" type="button">Submit</button>
         </div>
 
-        <!-- ✅ PIE CHARTS: 3 across -->
+        <!-- Pie charts -->
         <div class="section">
           <div class="chart-card">
             <p class="chart-title">Offset Share & ROI Snapshot (Annual)</p>
             <p class="chart-explain">
-              Left: offset share using the Black Coal factor (same colour style as the line chart).
-              Middle: offset share using the Brown Coal factor. Right: ROI improvement (green shades).
+              Left: Black coal comparison. Middle: Brown coal comparison. Right: ROI improvement (green shades).
             </p>
 
             <div class="pie-grid">
@@ -640,10 +639,17 @@
                 <div class="canvas-wrap"><canvas id="roiPie"></canvas></div>
               </div>
             </div>
+
+            <!-- ✅ black vs brown explanation -->
+            <div class="coal-diff">
+              <strong>Black vs Brown coal (why two charts?):</strong><br/>
+              Brown coal generally produces <strong>more CO₂ per MWh</strong> than black coal, so the “brown coal” estimate typically shows a
+              <strong>larger potential offset</strong> for the same battery deployment. We show both as a simple comparison range.
+            </div>
           </div>
         </div>
 
-        <!-- LINE CHARTS -->
+        <!-- Line charts -->
         <div class="section">
           <div class="chart-card">
             <p class="chart-title">Emissions Offset vs Number of Batteries</p>
@@ -662,7 +668,7 @@
           </div>
         </div>
 
-        <!-- ✅ Notes (exact content added) -->
+        <!-- Notes -->
         <details class="notes" open>
           <summary>
             <span style="display:flex; align-items:center; gap:10px;">
@@ -691,7 +697,7 @@
           </div>
         </details>
 
-        <!-- ✅ Save as PDF at bottom (green) -->
+        <!-- Save PDF at bottom -->
         <div class="section" style="margin-top:16px;">
           <button class="btn-pdf" id="pdfBtn" type="button">Save as PDF</button>
         </div>
@@ -705,11 +711,6 @@
   </div>
 
   <script>
-    // =========================================================
-    // Logic: keep the original line-chart calculations unchanged
-    // + integrate pie charts / ROI snapshot + layout controls
-    // =========================================================
-
     const MAX_VAL = 1000000;
     const blackEF = 324;
     const brownEF = 336.6;
@@ -777,7 +778,6 @@
       };
     }
 
-    // ✅ Black coal pie uses same colour as line chart (teal) + dark teal remainder
     function drawBlackCoalPie(avoided, total) {
       if (blackPie) blackPie.destroy();
 
@@ -788,7 +788,7 @@
 
       const pdf = isPdfMode();
       const offsetColor = pdf ? "#2b77ff" : getComputedStyle(document.documentElement).getPropertyValue("--coalBlackLine").trim();
-      const remainColor = pdf ? "#e6e6e6" : "rgba(10, 45, 60, 1)"; // very dark teal
+      const remainColor = pdf ? "#e6e6e6" : "rgba(10, 45, 60, 1)";
 
       blackPie = new Chart(document.getElementById("blackPie"), {
         type: "pie",
@@ -808,7 +808,6 @@
       });
     }
 
-    // ✅ Brown coal pie uses line-chart coral/pink + dark coral remainder
     function drawBrownCoalPie(avoided, total) {
       if (brownPie) brownPie.destroy();
 
@@ -819,7 +818,7 @@
 
       const pdf = isPdfMode();
       const offsetColor = pdf ? "#ff7a8a" : getComputedStyle(document.documentElement).getPropertyValue("--coalBrownLine").trim();
-      const remainColor = pdf ? "#e6e6e6" : "rgba(70, 18, 30, 1)"; // very dark coral
+      const remainColor = pdf ? "#e6e6e6" : "rgba(70, 18, 30, 1)";
 
       brownPie = new Chart(document.getElementById("brownPie"), {
         type: "pie",
@@ -839,13 +838,11 @@
       });
     }
 
-    // ✅ ROI pie: different shades of green
     function drawRoiPie(roiGain) {
       if (roiPie) roiPie.destroy();
 
       const safeGain = clampNumber(roiGain, 0, 100);
       const pdf = isPdfMode();
-
       const good = pdf ? "#16a34a" : getComputedStyle(document.documentElement).getPropertyValue("--g3").trim();
       const base = pdf ? "#e6e6e6" : getComputedStyle(document.documentElement).getPropertyValue("--g5").trim();
 
@@ -868,7 +865,6 @@
     }
 
     function renderLineCharts(capacity) {
-      // Original arrays/logic preserved
       const batteryQuantities = [1, 250, 500, 750, 1000];
       const timeYears = [5, 10, 15, 20];
       const fixedBatteryForTime = 500;
@@ -995,25 +991,21 @@
     }
 
     function updateAll() {
-      // Clamp numeric fields
       const capacity = clampInput("capacity");
       const totalEmissions = clampInput("totalEmissions");
       const cost = clampInput("cost");
       const rN = clampInput("revNormal");
       const rO = clampInput("revOpt");
 
-      // Slider
       const batteries = clampNumber(Number(document.getElementById("batterySlider").value), 0, 1000);
       document.getElementById("batteryCount").innerText = batteries;
 
-      // Annual avoided (pies)
       const annualBlack = (capacity * 365 * blackEF / 1000) * batteries;
       const annualBrown = (capacity * 365 * brownEF / 1000) * batteries;
 
       drawBlackCoalPie(annualBlack, totalEmissions);
       drawBrownCoalPie(annualBrown, totalEmissions);
 
-      // ROI
       if (cost > 0 && rN > 0 && rO > 0) {
         const pbN = cost / rN;
         const pbO = cost / rO;
@@ -1030,50 +1022,66 @@
         drawRoiPie(0);
       }
 
-      // Line charts (existing logic)
       renderLineCharts(capacity);
     }
 
-    // Submit
     document.getElementById("submitBtn").addEventListener("click", updateAll);
 
-    // Slider live label
     document.getElementById("batterySlider").addEventListener("input", () => {
       document.getElementById("batteryCount").innerText = document.getElementById("batterySlider").value;
     });
 
-    // Enforce range while typing
     ["capacity","totalEmissions","cost","revNormal","revOpt"].forEach(id => {
       const el = document.getElementById(id);
       el.addEventListener("input", () => clampInput(id));
       el.addEventListener("blur", () => clampInput(id));
     });
 
-    // PDF export (white bg + black axes/text)
+    // ✅ PDF export fix: prevent blank first pages + ensure capture starts at top
     function downloadPDF() {
       const report = document.getElementById("report");
+
+      // Make sure we're at the top of the capture
+      window.scrollTo(0, 0);
+
       report.classList.add("pdfMode");
       updateAll();
+
+      const rect = report.getBoundingClientRect();
+      const width = Math.ceil(rect.width);
+      const height = Math.ceil(rect.height);
 
       const opt = {
         margin: 0.35,
         filename: "optigrid_co2_roi_calculator.pdf",
-        html2canvas: { scale: 2, useCORS: true },
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: width,
+          windowHeight: height
+        },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
         jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
       };
 
-      html2pdf().from(report).set(opt).save().then(() => {
-        report.classList.remove("pdfMode");
-        updateAll();
-      });
+      html2pdf()
+        .set(opt)
+        .from(report)
+        .save()
+        .then(() => {
+          report.classList.remove("pdfMode");
+          updateAll();
+        });
     }
 
     document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
 
-    // Initial render
     window.addEventListener("load", () => updateAll());
 
-    // Re-render on resize (mobile)
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
