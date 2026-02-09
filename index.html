@@ -11,7 +11,7 @@
 
   <style>
     :root{
-      /* Brand */
+      /* Brand blues */
       --brandBlue:  #0b2a4a;
       --brandBlue2: #0a2340;
       --deepBlue:   #071c33;
@@ -20,37 +20,44 @@
       --text: #ffffff;
       --muted: rgba(255,255,255,0.82);
 
-      /* Panels on blue */
+      /* Panels */
       --panel: rgba(255,255,255,0.06);
       --panel2: rgba(255,255,255,0.10);
       --border: rgba(255,255,255,0.16);
 
-      /* Inputs (dark) */
+      /* Inputs */
       --inputBg: rgba(255,255,255,0.08);
       --inputBgFocus: rgba(255,255,255,0.11);
       --inputBorder: rgba(255,255,255,0.22);
       --inputText: rgba(255,255,255,0.95);
       --inputPlaceholder: rgba(255,255,255,0.55);
 
-      /* Matte blue buttons */
-      --btnBlue: #1e4ed8;     /* matte-ish */
-      --btnBlueHover: #1b44bf;
+      /* Buttons (liquid glass) */
+      --btnBlueA: rgba(30,78,216,0.34);
+      --btnBlueB: rgba(30,78,216,0.18);
+      --btnBlueBorder: rgba(147,197,253,0.38);
 
-      /* Accents */
+      --btnGreenA: rgba(22,163,74,0.34);
+      --btnGreenB: rgba(22,163,74,0.18);
+      --btnGreenBorder: rgba(134,239,172,0.40);
+
       --goodGreen: #22c55e;
 
-      /* Orange scale for pie charts */
-      --o1: #fff3e0;
-      --o2: #ffd7a8;
-      --o3: #ffb85c;
-      --o4: #f59e0b;
-      --o5: #d97706;
-      --o6: #8a3a00;
+      /* Chart colours (match your line graphs) */
+      --coalBlackLine: rgba(71,176,214,1);   /* teal/blue */
+      --coalBrownLine: rgba(255,122,138,1);  /* coral/pink */
+
+      /* Greens for ROI pie */
+      --g1: #dcfce7;
+      --g2: #86efac;
+      --g3: #22c55e;
+      --g4: #16a34a;
+      --g5: #14532d;
 
       --radius: 18px;
       --shadow: 0 18px 50px rgba(0,0,0,0.35);
 
-      /* PDF mode (white) */
+      /* PDF mode */
       --pdfBg: #ffffff;
       --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
@@ -139,16 +146,19 @@
     }
     .hero{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:14px;
       flex-wrap:wrap;
     }
     .hero-left{
+      width: 100%;
       display:flex;
       align-items:center;
+      justify-content:center;
       gap:12px;
-      min-width:0;
+      flex-wrap:wrap;
+      text-align:center;
     }
     .hero-left img{ height:28px; width:auto; display:block; }
     .hero h1{
@@ -156,13 +166,16 @@
       font-size: 26px;
       font-weight: 900;
       letter-spacing: 0.2px;
+      width:100%;
+      text-align:center; /* ✅ centered title */
     }
     .hero p{
-      margin: 8px 0 0 0;
+      margin: 8px auto 0 auto;
       color: var(--muted);
       line-height: 1.5;
       font-size: 13.5px;
       max-width: 980px;
+      text-align:center;
     }
 
     .content{ padding: 18px; }
@@ -191,7 +204,7 @@
       text-align: center;
     }
 
-    /* Inputs layout (top) */
+    /* Inputs at top (two boxes) */
     .input-grid{
       display:grid;
       grid-template-columns: 1fr;
@@ -201,16 +214,13 @@
       .input-grid{ grid-template-columns: 1fr 1fr; }
     }
 
+    /* ✅ Inputs stacked within each card */
     .inputs{
       display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
     }
-    @media (min-width: 560px){
-      .inputs{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
 
-    .field{ margin: 0; }
     label{
       display:block;
       font-size: 13px;
@@ -269,33 +279,52 @@
       accent-color: #60a5fa;
     }
 
-    /* Buttons (matte blue) */
-    .actions{
+    /* ✅ Submit button full-width across one line */
+    .submit-row{
       margin-top: 14px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
     }
-    @media (min-width: 720px){
-      .actions{ flex-direction: row; }
-    }
+
+    /* ✅ Liquid-glass buttons */
     button{
       width:100%;
-      border: none;
       border-radius: 14px;
       padding: 13px 14px;
       font-size: 15px;
       font-weight: 900;
       cursor: pointer;
       color: #fff;
-      background: var(--btnBlue);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
-      transition: transform 0.05s ease, filter 0.15s ease, background 0.15s ease;
+
+      border: 1px solid rgba(255,255,255,0.22);
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      box-shadow:
+        0 14px 30px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.24);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+
+      transition: transform 0.05s ease, filter 0.15s ease;
     }
-    button:hover{ background: var(--btnBlueHover); }
     button:active{ transform: translateY(1px); }
 
-    /* ROI summary (green numbers) */
+    /* matte blue look on top of glass */
+    .btn-submit{
+      background:
+        linear-gradient(180deg, var(--btnBlueA), var(--btnBlueB)),
+        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      border-color: var(--btnBlueBorder);
+    }
+    .btn-submit:hover{ filter: brightness(1.05); }
+
+    /* ✅ Save as PDF at bottom + green */
+    .btn-pdf{
+      background:
+        linear-gradient(180deg, var(--btnGreenA), var(--btnGreenB)),
+        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      border-color: var(--btnGreenBorder);
+    }
+    .btn-pdf:hover{ filter: brightness(1.05); }
+
+    /* ROI summary */
     #roiSummary{
       margin-top: 12px;
       padding: 12px;
@@ -322,12 +351,19 @@
       color: var(--goodGreen);
     }
 
-    /* Charts order: pie charts then line charts */
-    .charts{
+    /* Sections */
+    .section{
+      margin-top: 16px;
+    }
+
+    /* ✅ Pie charts: 3 in a row on desktop, stacked on mobile */
+    .pie-grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 16px;
-      margin-top: 16px;
+    }
+    @media (min-width: 980px){
+      .pie-grid{ grid-template-columns: 1fr 1fr 1fr; }
     }
 
     .chart-card{
@@ -353,27 +389,17 @@
       font-size: 13.5px;
     }
 
-    /* Pie grid: 1 col on mobile, 2 cols on desktop */
-    .pie-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 900px){
-      .pie-grid{ grid-template-columns: 1fr 1fr; }
-    }
-
     .canvas-wrap{
       position:relative;
       width:100%;
-      height: 300px;
+      height: 290px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.14);
       background: rgba(0,0,0,0.10);
       padding: 10px;
     }
     @media (min-width: 700px){
-      .canvas-wrap{ height: 330px; }
+      .canvas-wrap{ height: 320px; }
     }
     canvas{
       width:100% !important;
@@ -381,7 +407,7 @@
       display:block;
     }
 
-    /* Notes */
+    /* Notes dropdown */
     details.notes{
       margin-top: 16px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -431,6 +457,7 @@
     }
     .notes-body ul{ margin: 0 0 0 18px; padding: 0; }
     .notes-body li{ margin: 7px 0; color: rgba(255,255,255,0.88); }
+    .notes-body .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
 
     .fineprint{
       margin-top: 14px;
@@ -472,6 +499,7 @@
       background:#ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
+    /* Keep buttons hidden in PDF export */
     #report.pdfMode button{ display:none !important; }
 
     @media print{
@@ -505,19 +533,17 @@
         <div class="hero">
           <div class="hero-left">
             <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
-            <div style="min-width:0">
-              <h1>CO₂ Offset & ROI Calculator</h1>
-              <p>
-                Enter your figures, then press <strong>Submit</strong>. You’ll see (1) estimated emissions offset share,
-                (2) a simple ROI/payback snapshot, then (3) trend charts for scale and time.
-              </p>
-            </div>
+            <h1>CO₂ Offset & ROI Calculator</h1>
+            <p>
+              Enter your values and press <strong>Submit</strong>. You’ll get an indicative view of (1) annual offset share (pie charts),
+              (2) ROI/payback change, and (3) scale + time trend charts.
+            </p>
           </div>
         </div>
       </div>
 
       <div class="content">
-        <!-- INPUTS AT TOP (two boxes) -->
+        <!-- INPUTS -->
         <div class="input-grid">
           <div class="card">
             <h2>Inputs</h2>
@@ -526,13 +552,13 @@
             </p>
 
             <div class="inputs">
-              <div class="field">
+              <div>
                 <label>Battery Capacity (MWh)</label>
                 <input type="number" id="capacity" value="3.9" min="0" max="1000000" step="0.1" />
                 <div class="hint">Size of one battery unit.</div>
               </div>
 
-              <div class="field">
+              <div>
                 <label>Total Annual Grid Emissions (t CO₂)</label>
                 <input type="number" id="totalEmissions" value="500000" min="0" max="1000000" step="1" />
                 <div class="hint">Used to show offset as a share (%).</div>
@@ -556,19 +582,19 @@
             </p>
 
             <div class="inputs">
-              <div class="field">
+              <div>
                 <label>Project Cost ($)</label>
                 <input type="number" id="cost" value="1000000" min="0" max="1000000" step="1" />
                 <div class="hint">Total upfront cost.</div>
               </div>
 
-              <div class="field">
+              <div>
                 <label>Annual Revenue — Normal ($/year)</label>
                 <input type="number" id="revNormal" value="120000" min="0" max="1000000" step="1" />
                 <div class="hint">Expected yearly revenue in a baseline case.</div>
               </div>
 
-              <div class="field">
+              <div>
                 <label>Annual Revenue — Optimised ($/year)</label>
                 <input type="number" id="revOpt" value="180000" min="0" max="1000000" step="1" />
                 <div class="hint">Expected yearly revenue with optimisation.</div>
@@ -584,43 +610,41 @@
           </div>
         </div>
 
-        <!-- SUBMIT BUTTON BELOW TWO BOXES (matte blue) -->
-        <div class="actions" style="margin-top:16px;">
-          <button id="submitBtn" type="button">Submit</button>
-          <button id="pdfBtn" type="button">Download PDF</button>
+        <!-- ✅ Submit full-width below both cards -->
+        <div class="submit-row">
+          <button class="btn-submit" id="submitBtn" type="button">Submit</button>
         </div>
 
-        <!-- PIE CHARTS NEXT -->
-        <div class="charts">
+        <!-- ✅ PIE CHARTS: 3 across -->
+        <div class="section">
           <div class="chart-card">
-            <p class="chart-title">CO₂ Offset Share (Annual)</p>
+            <p class="chart-title">Offset Share & ROI Snapshot (Annual)</p>
             <p class="chart-explain">
-              These pie charts show how much of annual grid emissions could be offset (share %) under Black vs Brown coal factors.
-              Orange shades represent “offset”, the darker section represents “remaining”.
+              Left: offset share using the Black Coal factor (same colour style as the line chart).
+              Middle: offset share using the Brown Coal factor. Right: ROI improvement (green shades).
             </p>
 
             <div class="pie-grid">
               <div>
-                <p style="margin:0 0 8px 0; text-align:center; font-weight:900; color:rgba(255,255,255,0.92);">Black Coal Scenario</p>
+                <p style="margin:0 0 8px 0; text-align:center; font-weight:900; color:rgba(255,255,255,0.92);">Black Coal Offset Share</p>
                 <div class="canvas-wrap"><canvas id="blackPie"></canvas></div>
               </div>
+
               <div>
-                <p style="margin:0 0 8px 0; text-align:center; font-weight:900; color:rgba(255,255,255,0.92);">Brown Coal Scenario</p>
+                <p style="margin:0 0 8px 0; text-align:center; font-weight:900; color:rgba(255,255,255,0.92);">Brown Coal Offset Share</p>
                 <div class="canvas-wrap"><canvas id="brownPie"></canvas></div>
+              </div>
+
+              <div>
+                <p style="margin:0 0 8px 0; text-align:center; font-weight:900; color:rgba(255,255,255,0.92);">ROI Improvement</p>
+                <div class="canvas-wrap"><canvas id="roiPie"></canvas></div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="chart-card">
-            <p class="chart-title">ROI Improvement (Optimised vs Normal)</p>
-            <p class="chart-explain">
-              This pie shows how much payback improves under the Optimised revenue scenario.
-              It’s a simple comparison to help explain the impact of better utilisation/pricing.
-            </p>
-            <div class="canvas-wrap"><canvas id="roiPie"></canvas></div>
-          </div>
-
-          <!-- THEN THE TWO GRAPHS -->
+        <!-- LINE CHARTS -->
+        <div class="section">
           <div class="chart-card">
             <p class="chart-title">Emissions Offset vs Number of Batteries</p>
             <p class="chart-explain">
@@ -629,7 +653,7 @@
             <div class="canvas-wrap"><canvas id="batteryChart"></canvas></div>
           </div>
 
-          <div class="chart-card">
+          <div class="chart-card" style="margin-top:16px;">
             <p class="chart-title">Emissions Offset over Time (500 Batteries)</p>
             <p class="chart-explain">
               Trend view: shows how offset can accumulate over 5–20 years for 500 batteries.
@@ -638,22 +662,39 @@
           </div>
         </div>
 
-        <details class="notes">
+        <!-- ✅ Notes (exact content added) -->
+        <details class="notes" open>
           <summary>
             <span style="display:flex; align-items:center; gap:10px;">
-              Notes & Assumptions <span class="pill">More info</span>
+              Notes <span class="pill">More info</span>
             </span>
             <span class="chev" aria-hidden="true"></span>
           </summary>
           <div class="notes-body">
             <ul>
-              <li><strong>Assumptions:</strong> one full cycle per day; no degradation; no manufacturing/transport emissions.</li>
-              <li><strong>Emission factors used (for comparison):</strong> Brown coal EF = 336.6 kg CO₂/MWh; Black coal EF = 324 kg CO₂/MWh.</li>
-              <li><strong>Offset formula used:</strong> CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
-              <li><strong>ROI formulas:</strong> Payback = Cost / Annual Revenue; ROI Improvement (%) = (1 − Payback<sub>Optimised</sub>/Payback<sub>Normal</sub>) × 100</li>
+              <li><strong>Formula used:</strong></li>
+              <li class="mono">CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
+              <li><strong>where:</strong><br>
+                CE = Carbon Emission (tons/year)<br>
+                C = Battery Capacity<br>
+                EF = Black/Brown coal Emission Factor<br>
+                N<sub>years</sub> = Number of years<br>
+                N<sub>batteries</sub> = Number of batteries
+              </li>
+              <li><strong>ROI &amp; Payback formulas:</strong></li>
+              <li class="mono">Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
+              <li class="mono">Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
+              <li class="mono">ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
+              <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
+              <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
             </ul>
           </div>
         </details>
+
+        <!-- ✅ Save as PDF at bottom (green) -->
+        <div class="section" style="margin-top:16px;">
+          <button class="btn-pdf" id="pdfBtn" type="button">Save as PDF</button>
+        </div>
 
         <div class="fineprint">
           <span>OptiGrid x Team 55 MIG</span>
@@ -665,8 +706,8 @@
 
   <script>
     // =========================================================
-    // KEEP EXISTING CORE LOGIC FOR THE TWO LINE GRAPHS
-    // + integrate the new pie/slider dashboard (layout + style)
+    // Logic: keep the original line-chart calculations unchanged
+    // + integrate pie charts / ROI snapshot + layout controls
     // =========================================================
 
     const MAX_VAL = 1000000;
@@ -694,7 +735,6 @@
     }
 
     function getAxisColors() {
-      // On-screen dark -> white-ish axes; PDF -> black
       if (isPdfMode()) {
         return {
           tick: "rgba(0,0,0,1)",
@@ -726,6 +766,7 @@
             font: { size: 14, weight: "bold" }
           },
           legend: {
+            position: "top",
             labels: {
               color: pdf ? "#000" : "rgba(255,255,255,0.92)",
               font: { size: 12, weight: "bold" }
@@ -736,44 +777,78 @@
       };
     }
 
-    function drawOrangePie(canvasId, existingInstance, avoided, total, title) {
-      if (existingInstance) existingInstance.destroy();
+    // ✅ Black coal pie uses same colour as line chart (teal) + dark teal remainder
+    function drawBlackCoalPie(avoided, total) {
+      if (blackPie) blackPie.destroy();
 
       const safeTotal = Math.max(total, 0);
       const safeAvoided = Math.max(avoided, 0);
       const remaining = Math.max(safeTotal - safeAvoided, 0);
-
       const percent = safeTotal > 0 ? Math.min((safeAvoided / safeTotal) * 100, 100) : 0;
 
-      // Very different orange shades: super-light to very dark
-      const avoidedColor = isPdfMode() ? "#f59e0b" : getComputedStyle(document.documentElement).getPropertyValue("--o4").trim();
-      const remainingColor = isPdfMode() ? "#e6e6e6" : getComputedStyle(document.documentElement).getPropertyValue("--o6").trim();
+      const pdf = isPdfMode();
+      const offsetColor = pdf ? "#2b77ff" : getComputedStyle(document.documentElement).getPropertyValue("--coalBlackLine").trim();
+      const remainColor = pdf ? "#e6e6e6" : "rgba(10, 45, 60, 1)"; // very dark teal
 
-      const chart = new Chart(document.getElementById(canvasId), {
+      blackPie = new Chart(document.getElementById("blackPie"), {
         type: "pie",
         data: {
           labels: [
-            `${title} (${percent.toFixed(1)}%)`,
+            `Offset Share (${percent.toFixed(1)}%)`,
             "Remaining Emissions"
           ],
           datasets: [{
             data: [safeAvoided, remaining],
-            backgroundColor: [avoidedColor, remainingColor],
-            borderColor: isPdfMode() ? "#fff" : "rgba(255,255,255,0.9)",
+            backgroundColor: [offsetColor, remainColor],
+            borderColor: pdf ? "#fff" : "rgba(255,255,255,0.9)",
             borderWidth: 2
           }]
         },
-        options: pieOptions(title)
+        options: pieOptions("Black Coal Offset Share")
       });
-
-      return chart;
     }
 
+    // ✅ Brown coal pie uses line-chart coral/pink + dark coral remainder
+    function drawBrownCoalPie(avoided, total) {
+      if (brownPie) brownPie.destroy();
+
+      const safeTotal = Math.max(total, 0);
+      const safeAvoided = Math.max(avoided, 0);
+      const remaining = Math.max(safeTotal - safeAvoided, 0);
+      const percent = safeTotal > 0 ? Math.min((safeAvoided / safeTotal) * 100, 100) : 0;
+
+      const pdf = isPdfMode();
+      const offsetColor = pdf ? "#ff7a8a" : getComputedStyle(document.documentElement).getPropertyValue("--coalBrownLine").trim();
+      const remainColor = pdf ? "#e6e6e6" : "rgba(70, 18, 30, 1)"; // very dark coral
+
+      brownPie = new Chart(document.getElementById("brownPie"), {
+        type: "pie",
+        data: {
+          labels: [
+            `Offset Share (${percent.toFixed(1)}%)`,
+            "Remaining Emissions"
+          ],
+          datasets: [{
+            data: [safeAvoided, remaining],
+            backgroundColor: [offsetColor, remainColor],
+            borderColor: pdf ? "#fff" : "rgba(255,255,255,0.9)",
+            borderWidth: 2
+          }]
+        },
+        options: pieOptions("Brown Coal Offset Share")
+      });
+    }
+
+    // ✅ ROI pie: different shades of green
     function drawRoiPie(roiGain) {
       if (roiPie) roiPie.destroy();
 
       const safeGain = clampNumber(roiGain, 0, 100);
       const pdf = isPdfMode();
+
+      const good = pdf ? "#16a34a" : getComputedStyle(document.documentElement).getPropertyValue("--g3").trim();
+      const base = pdf ? "#e6e6e6" : getComputedStyle(document.documentElement).getPropertyValue("--g5").trim();
+
       roiPie = new Chart(document.getElementById("roiPie"), {
         type: "pie",
         data: {
@@ -783,15 +858,12 @@
           ],
           datasets: [{
             data: [safeGain, 100 - safeGain],
-            backgroundColor: [
-              pdf ? "#16a34a" : "rgba(34,197,94,0.95)",
-              pdf ? "#e6e6e6" : "rgba(255,255,255,0.18)"
-            ],
+            backgroundColor: [good, base],
             borderColor: pdf ? "#fff" : "rgba(255,255,255,0.9)",
             borderWidth: 2
           }]
         },
-        options: pieOptions("ROI Improvement from Optimisation")
+        options: pieOptions("ROI Improvement")
       });
     }
 
@@ -923,7 +995,7 @@
     }
 
     function updateAll() {
-      // Clamp all numeric fields
+      // Clamp numeric fields
       const capacity = clampInput("capacity");
       const totalEmissions = clampInput("totalEmissions");
       const cost = clampInput("cost");
@@ -934,17 +1006,15 @@
       const batteries = clampNumber(Number(document.getElementById("batterySlider").value), 0, 1000);
       document.getElementById("batteryCount").innerText = batteries;
 
-      // Annual avoided (pie inputs)
+      // Annual avoided (pies)
       const annualBlack = (capacity * 365 * blackEF / 1000) * batteries;
       const annualBrown = (capacity * 365 * brownEF / 1000) * batteries;
 
-      // Pies (orange scale)
-      blackPie = drawOrangePie("blackPie", blackPie, annualBlack, totalEmissions, "Offset Share (Black Coal)");
-      brownPie = drawOrangePie("brownPie", brownPie, annualBrown, totalEmissions, "Offset Share (Brown Coal)");
+      drawBlackCoalPie(annualBlack, totalEmissions);
+      drawBrownCoalPie(annualBrown, totalEmissions);
 
       // ROI
       if (cost > 0 && rN > 0 && rO > 0) {
-        // same ROI logic as before
         const pbN = cost / rN;
         const pbO = cost / rO;
         const roiGain = (1 - pbO / pbN) * 100;
@@ -964,39 +1034,37 @@
       renderLineCharts(capacity);
     }
 
-    // Submit button (explicit)
+    // Submit
     document.getElementById("submitBtn").addEventListener("click", updateAll);
 
-    // Slider live updates (mobile friendly)
+    // Slider live label
     document.getElementById("batterySlider").addEventListener("input", () => {
       document.getElementById("batteryCount").innerText = document.getElementById("batterySlider").value;
     });
 
-    // Enforce non-negative and max 1,000,000 while typing
+    // Enforce range while typing
     ["capacity","totalEmissions","cost","revNormal","revOpt"].forEach(id => {
       const el = document.getElementById(id);
       el.addEventListener("input", () => clampInput(id));
       el.addEventListener("blur", () => clampInput(id));
     });
 
-    // PDF (keeps your prior “white pdf + black text/axes” behavior)
+    // PDF export (white bg + black axes/text)
     function downloadPDF() {
       const report = document.getElementById("report");
       report.classList.add("pdfMode");
-
-      // Re-render with PDF colors
       updateAll();
 
       const opt = {
         margin: 0.35,
-        filename: "optigrid_co2_roi_dashboard.pdf",
+        filename: "optigrid_co2_roi_calculator.pdf",
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
       };
 
       html2pdf().from(report).set(opt).save().then(() => {
         report.classList.remove("pdfMode");
-        updateAll(); // restore on-screen style
+        updateAll();
       });
     }
 
@@ -1005,7 +1073,7 @@
     // Initial render
     window.addEventListener("load", () => updateAll());
 
-    // Re-render on resize for better mobile chart sizing
+    // Re-render on resize (mobile)
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
