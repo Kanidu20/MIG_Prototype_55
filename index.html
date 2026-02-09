@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OptiGrid | CO₂ Offset & ROI Calculator</title>
 
-  <!-- Chart.js + html2pdf -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
     :root{
@@ -22,7 +20,6 @@
 
       /* Panels */
       --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.10);
       --border: rgba(255,255,255,0.16);
 
       /* Inputs */
@@ -30,9 +27,8 @@
       --inputBgFocus: rgba(255,255,255,0.11);
       --inputBorder: rgba(255,255,255,0.22);
       --inputText: rgba(255,255,255,0.95);
-      --inputPlaceholder: rgba(255,255,255,0.55);
 
-      /* Buttons (liquid glass) */
+      /* Liquid glass buttons */
       --btnBlueA: rgba(30,78,216,0.34);
       --btnBlueB: rgba(30,78,216,0.18);
       --btnBlueBorder: rgba(147,197,253,0.38);
@@ -43,22 +39,18 @@
 
       --goodGreen: #22c55e;
 
-      /* Chart colours (match your line graphs) */
-      --coalBlackLine: rgba(71,176,214,1);   /* teal/blue */
-      --coalBrownLine: rgba(255,122,138,1);  /* coral/pink */
+      /* Chart line colours */
+      --coalBlackLine: rgba(71,176,214,1);
+      --coalBrownLine: rgba(255,122,138,1);
 
-      /* Greens for ROI pie */
-      --g3: #22c55e;
-      --g5: #14532d;
-
-      --radius: 18px;
-      --shadow: 0 18px 50px rgba(0,0,0,0.35);
-
-      /* PDF mode */
+      /* PDF palette */
       --pdfBg: #ffffff;
       --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
       --pdfShadow: 0 10px 26px rgba(0,0,0,0.08);
+
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
     }
 
     *{ box-sizing:border-box; }
@@ -135,7 +127,6 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
     }
 
-    /* Header inside report */
     .report-header{
       padding: 18px 18px 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.00));
@@ -175,7 +166,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
-      background: var(--panel);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
@@ -194,7 +185,6 @@
       text-align: center;
     }
 
-    /* Inputs at top (two boxes) */
     .input-grid{
       display:grid;
       grid-template-columns: 1fr;
@@ -204,7 +194,6 @@
       .input-grid{ grid-template-columns: 1fr 1fr; }
     }
 
-    /* Inputs stacked */
     .inputs{
       display:grid;
       grid-template-columns: 1fr;
@@ -231,7 +220,6 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
-    input[type="number"]::placeholder{ color: var(--inputPlaceholder); }
     input[type="number"]:focus{
       background: var(--inputBgFocus);
       border-color: rgba(255,255,255,0.34);
@@ -243,7 +231,6 @@
       color: rgba(255,255,255,0.74);
     }
 
-    /* Slider */
     .slider-wrap{
       margin-top: 10px;
       padding: 12px;
@@ -269,10 +256,7 @@
       accent-color: #60a5fa;
     }
 
-    /* Submit full width */
-    .submit-row{ margin-top: 14px; }
-
-    /* Liquid-glass buttons */
+    /* Buttons (liquid glass) */
     button{
       width:100%;
       border-radius: 14px;
@@ -335,12 +319,12 @@
     .result-line span{
       font-weight: 900;
       color: var(--goodGreen);
-      font-size: 16.5px;
+      font-size: 18px;
     }
 
     .section{ margin-top: 16px; }
 
-    /* Pie charts: 3 across on desktop */
+    /* Pie charts: 3 across desktop */
     .pie-grid{
       display:grid;
       grid-template-columns: 1fr;
@@ -354,7 +338,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
-      background: var(--panel);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
@@ -373,7 +357,6 @@
       font-size: 13.5px;
     }
 
-    /* ✅ extra explanation under pies */
     .coal-diff{
       margin-top: 12px;
       padding: 12px;
@@ -474,15 +457,10 @@
       box-shadow: var(--pdfShadow) !important;
       color: var(--pdfText) !important;
     }
-    /* Make most text black in PDF... */
     #report.pdfMode, #report.pdfMode *{ color: var(--pdfText) !important; }
-    /* ...but keep the ROI numbers green (and readable) */
+    /* keep ROI green */
     #report.pdfMode .result-line span{ color: #16a34a !important; }
 
-    #report.pdfMode .report-header{
-      background:#ffffff !important;
-      border-bottom-color: var(--pdfBorder) !important;
-    }
     #report.pdfMode .card,
     #report.pdfMode .chart-card,
     #report.pdfMode details.notes{
@@ -501,15 +479,15 @@
       background:#ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
-    /* Hide buttons in PDF */
-    #report.pdfMode button{ display:none !important; }
 
+    /* Print */
     @media print{
       *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       body{ background:#fff !important; margin:0 !important; }
       .topbar{ display:none !important; }
       .page{ padding:0 !important; max-width:none !important; }
       #report{ border-radius:0 !important; box-shadow:none !important; }
+      #submitBtn, #pdfBtn { display:none !important; } /* hide buttons */
       .card, .chart-card, details.notes, .canvas-wrap { break-inside: avoid !important; page-break-inside: avoid !important; }
     }
   </style>
@@ -531,7 +509,7 @@
 
   <div class="page">
     <div id="report">
-      <div class="report-header">
+      <div class="report-header hero">
         <div class="hero-left">
           <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
           <h1>CO₂ Offset & ROI Calculator</h1>
@@ -543,7 +521,7 @@
       </div>
 
       <div class="content">
-        <!-- INPUTS -->
+        <!-- Input cards -->
         <div class="input-grid">
           <div class="card">
             <h2>Inputs</h2>
@@ -610,8 +588,8 @@
           </div>
         </div>
 
-        <!-- Submit -->
-        <div class="submit-row">
+        <!-- Submit button (full width) -->
+        <div class="section">
           <button class="btn-submit" id="submitBtn" type="button">Submit</button>
         </div>
 
@@ -640,10 +618,9 @@
               </div>
             </div>
 
-            <!-- ✅ black vs brown explanation -->
             <div class="coal-diff">
               <strong>Black vs Brown coal (why two charts?):</strong><br/>
-              Brown coal generally produces <strong>more CO₂ per MWh</strong> than black coal, so the “brown coal” estimate typically shows a
+              Brown coal generally produces <strong>more CO₂ per MWh</strong> than black coal, so the “brown coal” estimate often shows a
               <strong>larger potential offset</strong> for the same battery deployment. We show both as a simple comparison range.
             </div>
           </div>
@@ -669,7 +646,7 @@
         </div>
 
         <!-- Notes -->
-        <details class="notes" open>
+        <details class="notes">
           <summary>
             <span style="display:flex; align-items:center; gap:10px;">
               Notes <span class="pill">More info</span>
@@ -697,8 +674,8 @@
           </div>
         </details>
 
-        <!-- Save PDF at bottom -->
-        <div class="section" style="margin-top:16px;">
+        <!-- Save as PDF at bottom (print) -->
+        <div class="section">
           <button class="btn-pdf" id="pdfBtn" type="button">Save as PDF</button>
         </div>
 
@@ -722,7 +699,6 @@
       if (!Number.isFinite(n)) return min;
       return Math.min(max, Math.max(min, n));
     }
-
     function clampInput(id) {
       const el = document.getElementById(id);
       const raw = Number(el.value);
@@ -843,8 +819,10 @@
 
       const safeGain = clampNumber(roiGain, 0, 100);
       const pdf = isPdfMode();
-      const good = pdf ? "#16a34a" : getComputedStyle(document.documentElement).getPropertyValue("--g3").trim();
-      const base = pdf ? "#e6e6e6" : getComputedStyle(document.documentElement).getPropertyValue("--g5").trim();
+
+      /* shades of green */
+      const gLight = pdf ? "#22c55e" : "#22c55e";
+      const gDark  = pdf ? "#14532d" : "#14532d";
 
       roiPie = new Chart(document.getElementById("roiPie"), {
         type: "pie",
@@ -855,7 +833,7 @@
           ],
           datasets: [{
             data: [safeGain, 100 - safeGain],
-            backgroundColor: [good, base],
+            backgroundColor: [gLight, gDark],
             borderColor: pdf ? "#fff" : "rgba(255,255,255,0.9)",
             borderWidth: 2
           }]
@@ -1025,7 +1003,24 @@
       renderLineCharts(capacity);
     }
 
+    // ✅ Print-PDF method (like before)
+    function savePDFPrint() {
+      const report = document.getElementById("report");
+      report.classList.add("pdfMode");
+      updateAll(); // re-render charts with PDF axis colours
+
+      // Let charts finish drawing before print dialog opens
+      setTimeout(() => window.print(), 350);
+    }
+
+    window.addEventListener("afterprint", () => {
+      const report = document.getElementById("report");
+      report.classList.remove("pdfMode");
+      updateAll();
+    });
+
     document.getElementById("submitBtn").addEventListener("click", updateAll);
+    document.getElementById("pdfBtn").addEventListener("click", savePDFPrint);
 
     document.getElementById("batterySlider").addEventListener("input", () => {
       document.getElementById("batteryCount").innerText = document.getElementById("batterySlider").value;
@@ -1036,49 +1031,6 @@
       el.addEventListener("input", () => clampInput(id));
       el.addEventListener("blur", () => clampInput(id));
     });
-
-    // ✅ PDF export fix: prevent blank first pages + ensure capture starts at top
-    function downloadPDF() {
-      const report = document.getElementById("report");
-
-      // Make sure we're at the top of the capture
-      window.scrollTo(0, 0);
-
-      report.classList.add("pdfMode");
-      updateAll();
-
-      const rect = report.getBoundingClientRect();
-      const width = Math.ceil(rect.width);
-      const height = Math.ceil(rect.height);
-
-      const opt = {
-        margin: 0.35,
-        filename: "optigrid_co2_roi_calculator.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: "#ffffff",
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: width,
-          windowHeight: height
-        },
-        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
-      };
-
-      html2pdf()
-        .set(opt)
-        .from(report)
-        .save()
-        .then(() => {
-          report.classList.remove("pdfMode");
-          updateAll();
-        });
-    }
-
-    document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
 
     window.addEventListener("load", () => updateAll());
 
