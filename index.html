@@ -10,30 +10,36 @@
 
   <style>
     :root{
-      /* Page */
+      /* Page stays white */
       --pageBg: #ffffff;
 
-      /* Text */
-      --ink: #111827;                 /* dark grey */
-      --muted: rgba(17,24,39,0.70);
+      /* Darker OptiGrid blues (for everything you marked in red) */
+      --deepBlue: #071c33;            /* NEW: darker background */
+      --deepBlue2: #06162a;           /* NEW: darker gradient end */
+      --brandBlue: #0b2a4a;
+      --brandBlue2:#0a2340;
 
-      /* Brand */
-      --brandBlue: #0b2a4a;           /* dark OptiGrid blue */
-      --brandBlue2: #0a2340;
+      /* Text */
+      --inkOnBlue: #ffffff;
+      --mutedOnBlue: rgba(255,255,255,0.82);
+
+      /* Surfaces on blue */
+      --panelOnBlue: rgba(255,255,255,0.08);
+      --panelOnBlue2: rgba(255,255,255,0.12);
+      --borderOnBlue: rgba(255,255,255,0.18);
 
       /* UI */
-      --border: rgba(17,24,39,0.16);
-      --soft: #f6f8fc;
       --radius: 18px;
-      --shadow: 0 18px 50px rgba(0,0,0,0.10);
+      --shadow: 0 18px 50px rgba(0,0,0,0.20);
 
       /* Buttons */
-      --orange: #f59e0b;              /* update button */
+      --orange: #f59e0b;
       --orangeHover: #d97706;
-      --green: #16a34a;               /* download PDF + highlight numbers */
+
+      --green: #16a34a;               /* Download PDF + green numbers */
       --greenHover: #15803d;
 
-      /* PDF palette (force white + black text) */
+      /* PDF palette */
       --pdfBg: #ffffff;
       --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
@@ -44,7 +50,6 @@
     body{
       margin: 0;
       font-family: Arial, sans-serif;
-      color: var(--ink);
       background: var(--pageBg);
     }
 
@@ -105,16 +110,16 @@
       padding: 18px 18px 56px;
     }
 
-    /* Whole report card */
+    /* Whole report card (page behind stays white) */
     #report{
-      border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      background: #ffffff; /* keep page behind it white */
+      border: 1px solid rgba(7, 28, 51, 0.22);
+      background: #ffffff;
     }
 
-    /* Header card (must be blue) */
+    /* Header card stays blue */
     .report-header{
       display: flex;
       align-items: center;
@@ -133,14 +138,12 @@
     .report-header .titles{
       display: grid;
       gap: 6px;
-      min-width: 0;
       width: 100%;
     }
     .report-header .h1{
       margin: 0;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 900;
-      letter-spacing: 0.2px;
       text-align: center;
     }
     .report-header .snippet{
@@ -152,7 +155,12 @@
       text-align: center;
     }
 
-    .content{ padding: 18px; }
+    /* ✅ EVERYTHING YOU MARKED IN RED: make this darker blue */
+    .content{
+      padding: 18px;
+      background: linear-gradient(180deg, var(--deepBlue), var(--deepBlue2));
+      color: var(--inkOnBlue);
+    }
 
     .grid{
       display: grid;
@@ -163,36 +171,34 @@
       .grid{ grid-template-columns: 1.05fr 0.95fr; }
     }
 
-    /* Cards */
+    /* Cards (default now dark, since they sit in the red area) */
     .card{
-      border: 1px solid var(--border);
+      border: 1px solid var(--borderOnBlue);
       border-radius: 16px;
       padding: 16px;
-      background: #fff;
+      background: rgba(255,255,255,0.06);
+      color: var(--inkOnBlue);
     }
     .card h2{
       margin: 0 0 10px 0;
       font-size: 18px;
-      letter-spacing: 0.2px;
       text-align: center;
       font-weight: 900;
+      color: var(--inkOnBlue);
     }
     .subtext{
       margin: 0 0 14px 0;
-      color: var(--muted);
+      color: var(--mutedOnBlue);
       font-size: 13.5px;
       line-height: 1.45;
       text-align: center;
     }
 
-    /* Blue calculator cards (Inputs + ROI) */
+    /* Inputs / ROI cards slightly “panel” feel */
     .card-blue{
-      background: linear-gradient(180deg, var(--brandBlue), var(--brandBlue2));
-      border-color: rgba(255,255,255,0.18);
-      color: #fff;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+      border-color: rgba(255,255,255,0.20);
     }
-    .card-blue h2{ color:#fff; }
-    .card-blue .subtext{ color: rgba(255,255,255,0.86); }
 
     .field{ margin-bottom: 12px; }
     label{
@@ -200,33 +206,29 @@
       font-weight: 800;
       font-size: 13px;
       margin-bottom: 6px;
+      color: rgba(255,255,255,0.95);
     }
 
-    /* Inputs */
     input{
       width: 100%;
       padding: 11px 12px;
       font-size: 15px;
-      border: 1px solid rgba(17,24,39,0.20);
+      border: 1px solid rgba(255,255,255,0.22);
       border-radius: 12px;
       outline: none;
-      background: #ffffff;
-      color: var(--ink);
-    }
-    .card-blue input{
-      border-color: rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.98);
       color: #111827;
     }
+
     .hint{
       margin-top: 6px;
       font-size: 12px;
-      color: rgba(255,255,255,0.80);
+      color: rgba(255,255,255,0.78);
     }
 
     .info{
-      background: rgba(255,255,255,0.10);
-      border: 1px dashed rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      border: 1px dashed rgba(255,255,255,0.22);
       border-radius: 14px;
       padding: 12px;
       font-size: 13px;
@@ -242,7 +244,7 @@
       padding: 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.08);
     }
     #roiResults h3{
       margin: 0 0 8px 0;
@@ -260,7 +262,7 @@
     }
     .result-line span{
       font-weight: 900;
-      color: var(--green); /* numbers in green */
+      color: var(--green);
     }
 
     .actions{
@@ -275,26 +277,23 @@
       font-size: 15px;
       font-weight: 900;
       cursor: pointer;
-      transition: transform 0.05s ease, filter 0.15s ease, background 0.15s ease;
+      transition: transform 0.05s ease, filter 0.15s ease;
       color: #fff;
       width: 100%;
     }
     button:active{ transform: translateY(1px); }
 
-    /* Update button = orange */
+    /* Update button orange */
     .btn-update{
       background: linear-gradient(180deg, var(--orange), var(--orangeHover));
       box-shadow: 0 10px 26px rgba(245,158,11,0.22);
     }
-    .btn-update:hover{ filter: brightness(1.03); }
 
-    /* Download PDF = green */
+    /* Download PDF green */
     .btn-pdf{
       background: linear-gradient(180deg, var(--green), var(--greenHover));
       box-shadow: 0 10px 26px rgba(22,163,74,0.22);
-      font-size: 15px;
     }
-    .btn-pdf:hover{ filter: brightness(1.03); }
 
     /* Charts */
     .charts{
@@ -308,12 +307,12 @@
       font-size: 18px;
       font-weight: 900;
       text-align: center;
-      color: var(--ink);
+      color: rgba(255,255,255,0.98);
     }
     .chart-explain{
       margin: 0 0 12px 0;
       font-size: 13.5px;
-      color: var(--muted);
+      color: rgba(255,255,255,0.82);
       line-height: 1.45;
       text-align: center;
     }
@@ -321,9 +320,9 @@
       position: relative;
       width: 100%;
       height: 340px;
-      background: var(--soft);
+      background: rgba(255,255,255,0.06);
       border-radius: 14px;
-      border: 1px solid rgba(17,24,39,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
       padding: 10px;
     }
     @media (min-width: 600px){ .chart-wrap{ height: 360px; } }
@@ -336,10 +335,11 @@
 
     /* Notes dropdown */
     details.notes{
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.18);
       border-radius: 16px;
       padding: 12px 14px;
-      background: #fff;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
     }
     details.notes summary{
       cursor: pointer;
@@ -350,7 +350,7 @@
       gap: 10px;
       font-weight: 900;
       font-size: 16px;
-      color: var(--ink);
+      color: rgba(255,255,255,0.95);
     }
     details.notes summary::-webkit-details-marker{ display:none; }
 
@@ -359,22 +359,20 @@
       align-items: center;
       gap: 10px;
     }
-    /* "More info" pill */
     .pill{
       font-size: 12px;
       font-weight: 900;
       padding: 6px 10px;
       border-radius: 999px;
-      background: var(--soft);
-      border: 1px solid rgba(17,24,39,0.10);
-      color: rgba(17,24,39,0.80);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.88);
     }
-
     .chev{
       width: 12px;
       height: 12px;
-      border-right: 3px solid rgba(17,24,39,0.70);
-      border-bottom: 3px solid rgba(17,24,39,0.70);
+      border-right: 3px solid rgba(255,255,255,0.80);
+      border-bottom: 3px solid rgba(255,255,255,0.80);
       transform: rotate(45deg);
       transition: transform 0.15s ease;
       margin-left: 8px;
@@ -385,21 +383,21 @@
     .notes-body{
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid rgba(17,24,39,0.12);
-      color: var(--ink);
+      border-top: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.92);
     }
     .notes-body ul{ margin: 0 0 0 18px; padding: 0; }
-    .notes-body li{ margin: 7px 0; color: rgba(17,24,39,0.88); font-size: 13.5px; }
+    .notes-body li{ margin: 7px 0; color: rgba(255,255,255,0.88); font-size: 13.5px; }
 
     .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
-      border-top: 1px solid rgba(17,24,39,0.12);
+      border-top: 1px solid rgba(255,255,255,0.14);
     }
     .fineprint{
       margin-top: 10px;
       font-size: 12px;
-      color: rgba(17,24,39,0.62);
+      color: rgba(255,255,255,0.70);
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -407,7 +405,7 @@
     }
 
     /* ---------------------------------------------------
-       PDF MODE: FORCE WHITE BACKGROUND + BLACK TEXT (ALL)
+       PDF MODE: WHITE BACKGROUND + BLACK TEXT (ALL)
        --------------------------------------------------- */
     #report.pdfMode{
       background: var(--pdfBg) !important;
@@ -419,6 +417,9 @@
     #report.pdfMode *{
       color: var(--pdfText) !important;
     }
+    #report.pdfMode .content{
+      background: #ffffff !important; /* override dark blue */
+    }
     #report.pdfMode .report-header{
       background: #ffffff !important;
       border-bottom-color: var(--pdfBorder) !important;
@@ -428,12 +429,9 @@
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
-    #report.pdfMode .card-blue{
-      background: #ffffff !important;
-      border-color: var(--pdfBorder) !important;
-    }
     #report.pdfMode .info,
-    #report.pdfMode #roiResults{
+    #report.pdfMode #roiResults,
+    #report.pdfMode .chart-wrap{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
@@ -441,14 +439,6 @@
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
       box-shadow: none !important;
-    }
-    #report.pdfMode .chart-wrap{
-      background: #ffffff !important;
-      border-color: var(--pdfBorder) !important;
-    }
-    #report.pdfMode .pill{
-      background: #ffffff !important;
-      border-color: var(--pdfBorder) !important;
     }
     #report.pdfMode .btn-update,
     #report.pdfMode .btn-pdf{
@@ -490,20 +480,16 @@
         <div class="titles">
           <p class="h1">CO₂ Offset & ROI Calculator</p>
           <p class="snippet">
-            Enter a few numbers, then press <strong>Update</strong>.
-            You’ll see (1) estimated emissions offset and (2) simple payback and ROI improvement.
+            Enter a few numbers, then press <strong>Update</strong>. You’ll see (1) emissions offset and (2) payback + ROI improvement.
           </p>
         </div>
       </div>
 
       <div class="content">
         <div class="grid">
-          <!-- INPUTS -->
           <div class="card card-blue">
             <h2>Inputs</h2>
-            <p class="subtext">
-              Set the battery size (capacity). This changes the results in the graphs.
-            </p>
+            <p class="subtext">Battery size (capacity). This changes the results.</p>
 
             <div class="field">
               <label>Battery Capacity (MWh per battery)</label>
@@ -518,18 +504,13 @@
                 <li>Brown Coal: 336.6 kg CO₂/MWh</li>
                 <li>Black Coal: 324 kg CO₂/MWh</li>
               </ul>
-              <div style="margin-top:8px;">
-                <strong>Simple idea:</strong> more capacity + more batteries = more offset shown.
-              </div>
+              <div style="margin-top:8px;"><strong>Simple idea:</strong> bigger + more = more offset.</div>
             </div>
           </div>
 
-          <!-- ROI -->
           <div class="card card-blue">
             <h2>ROI Calculator</h2>
-            <p class="subtext">
-              Enter the project cost and yearly revenue. The calculator shows how many years to pay back.
-            </p>
+            <p class="subtext">Cost and yearly revenue. It shows how many years to pay back.</p>
 
             <div class="field">
               <label>Project Cost ($)</label>
@@ -562,13 +543,10 @@
           </div>
         </div>
 
-        <!-- CHARTS -->
         <div class="charts">
           <div class="card">
             <p class="chart-title">Emissions Offset vs Number of Batteries</p>
-            <p class="chart-explain">
-              This shows the estimated yearly offset as you scale the number of batteries.
-            </p>
+            <p class="chart-explain">Estimated yearly offset as you add more batteries.</p>
             <div class="chart-wrap">
               <canvas id="batteryChart"></canvas>
             </div>
@@ -576,15 +554,12 @@
 
           <div class="card">
             <p class="chart-title">Emissions Offset over Time (500 Batteries)</p>
-            <p class="chart-explain">
-              This shows how offset adds up over 5 to 20 years with 500 batteries.
-            </p>
+            <p class="chart-explain">How the offset adds up over 5 to 20 years (with 500 batteries).</p>
             <div class="chart-wrap">
               <canvas id="timeChart"></canvas>
             </div>
           </div>
 
-          <!-- NOTES DROPDOWN -->
           <details class="notes">
             <summary>
               <span class="summary-left">
@@ -628,7 +603,7 @@
 
   <script>
     // IMPORTANT: CALCULATION LOGIC / ARRAYS / CONSTANTS BELOW ARE UNCHANGED.
-    // Only input validation (no negatives, max 1,000,000) + styling changes were added.
+    // Only styling + input limits were added.
 
     const MAX_VAL = 1000000;
 
@@ -649,7 +624,8 @@
       return document.getElementById("report").classList.contains("pdfMode");
     }
 
-    // Chart colors: normal mode uses dark grey axes; PDF mode uses black
+    // ✅ When NOT printing, we're on dark blue -> use light axes/labels.
+    // ✅ When printing (pdfMode), force black axes/labels.
     function getChartColors() {
       if (isPdfMode()) {
         return {
@@ -661,16 +637,15 @@
         };
       }
       return {
-        tick: "rgba(17,24,39,0.85)",
-        title: "rgba(17,24,39,0.95)",
-        grid: "rgba(17,24,39,0.10)",
-        border: "rgba(17,24,39,0.35)",
-        legend: "rgba(17,24,39,0.90)"
+        tick: "rgba(255,255,255,0.88)",
+        title: "rgba(255,255,255,0.95)",
+        grid: "rgba(255,255,255,0.10)",
+        border: "rgba(255,255,255,0.22)",
+        legend: "rgba(255,255,255,0.92)"
       };
     }
 
     function calculate() {
-      // Clamp inputs (no negatives, max 1,000,000)
       const capacity = clampInput("capacity");
 
       const brownEF = 336.6;
@@ -802,7 +777,6 @@
         }
       });
 
-      // Clamp ROI inputs
       const cost = clampInput("cost");
       const revenueNormal = clampInput("revenueNormal");
       const revenueOptimised = clampInput("revenueOptimised");
@@ -823,7 +797,6 @@
       }
     }
 
-    // White PDF export: apply pdfMode + re-render charts with black axes + print
     function savePDFWhite() {
       const report = document.getElementById("report");
       report.classList.add("pdfMode");
@@ -831,14 +804,12 @@
       setTimeout(() => window.print(), 350);
     }
 
-    // Revert after printing
     window.addEventListener("afterprint", () => {
       const report = document.getElementById("report");
       report.classList.remove("pdfMode");
       calculate();
     });
 
-    // Enforce limits live as user types
     ["capacity","cost","revenueNormal","revenueOptimised"].forEach(id => {
       window.addEventListener("load", () => {
         const el = document.getElementById(id);
