@@ -10,7 +10,7 @@
 
   <style>
     :root{
-      /* Site theme (dark, OptiGrid-ish) */
+      /* Site theme (dark) */
       --bg: #07121f;
       --border: rgba(255,255,255,0.12);
       --text: #e8eef9;
@@ -31,11 +31,11 @@
 
       /* PDF (white) palette */
       --pdfBg: #ffffff;
-      --pdfText: #0b1220;
-      --pdfMuted: rgba(11,18,32,0.72);
+      --pdfText: #000000;            /* <- force true black */
+      --pdfMuted: rgba(0,0,0,0.72);
       --pdfCard: #ffffff;
       --pdfCard2: #f4f6fb;
-      --pdfBorder: rgba(11,18,32,0.14);
+      --pdfBorder: rgba(0,0,0,0.18);
       --pdfShadow: 0 10px 26px rgba(0,0,0,0.08);
     }
 
@@ -50,6 +50,7 @@
         var(--bg);
     }
 
+    /* Top bar (screen only) */
     .topbar{
       position: sticky;
       top: 0;
@@ -105,6 +106,7 @@
       padding: 18px 18px 56px;
     }
 
+    /* Report container */
     #report{
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -230,6 +232,9 @@
       box-shadow: 0 10px 26px rgba(62,143,106,0.22);
       font-size: 15px;
     }
+    .btn-pdf:hover{
+      background: linear-gradient(180deg, var(--greenHover), #2a6248);
+    }
 
     #roiResults{
       display: none;
@@ -280,50 +285,77 @@
       display: block;
     }
 
+    .notes h2{
+      margin: 0 0 10px 0;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+    }
+    .notes ul{ margin: 0 0 0 18px; padding: 0; }
+    .notes li{ margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
+
     .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
     }
+    .fineprint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(232,238,249,0.62);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    /* -------- PDF MODE (white report) -------- */
+    /* ---------------------------------------------------
+       PDF MODE: FORCE WHITE BACKGROUND + BLACK TEXT (ALL)
+       --------------------------------------------------- */
     #report.pdfMode{
       background: var(--pdfBg) !important;
       border-color: var(--pdfBorder) !important;
       box-shadow: var(--pdfShadow) !important;
+      color: var(--pdfText) !important; /* <- everything inside defaults to black */
     }
+
+    /* Force all text-like elements to black */
+    #report.pdfMode,
+    #report.pdfMode *{
+      color: var(--pdfText) !important;
+    }
+
+    /* Re-allow only subtle muted for helper text if you want (still black-ish) */
+    #report.pdfMode .subtext,
+    #report.pdfMode .snippet,
+    #report.pdfMode .fineprint,
+    #report.pdfMode .notes li,
+    #report.pdfMode .info li{
+      color: var(--pdfText) !important; /* user asked ALL text black */
+    }
+
+    /* White card surfaces */
     #report.pdfMode .report-header{
       background: #ffffff !important;
       border-bottom-color: var(--pdfBorder) !important;
     }
-    #report.pdfMode .report-header .h1{ color: var(--pdfText) !important; }
-    #report.pdfMode .report-header .snippet{ color: var(--pdfMuted) !important; }
-
     #report.pdfMode .card{
       background: var(--pdfCard) !important;
-      border-color: var(--pdfBorder) !important;
-      color: var(--pdfText) !important;
-    }
-    #report.pdfMode .card h2,
-    #report.pdfMode .chart-title,
-    #report.pdfMode label{
-      color: var(--pdfText) !important;
-    }
-    #report.pdfMode .subtext{ color: var(--pdfMuted) !important; }
-    #report.pdfMode input{
-      background: #ffffff !important;
-      color: var(--pdfText) !important;
       border-color: var(--pdfBorder) !important;
     }
     #report.pdfMode .info{
       background: var(--pdfCard2) !important;
       border-color: var(--pdfBorder) !important;
-      color: var(--pdfText) !important;
     }
     #report.pdfMode #roiResults{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
-      color: var(--pdfText) !important;
+    }
+
+    /* Inputs look like a normal document */
+    #report.pdfMode input{
+      background: #ffffff !important;
+      border-color: var(--pdfBorder) !important;
+      box-shadow: none !important;
     }
 
     /* Print rules */
@@ -336,7 +368,9 @@
       .topbar{ display:none !important; }
       .page{ padding:0 !important; max-width:none !important; }
       #report{ border-radius:0 !important; box-shadow:none !important; }
-      .btn-pdf{ display:none !important; }
+      .btn-pdf{ display:none !important; } /* hide button in PDF */
+      /* Avoid awkward splits */
+      .card, .report-header, .chart-wrap { break-inside: avoid !important; page-break-inside: avoid !important; }
     }
   </style>
 </head>
@@ -435,10 +469,36 @@
               <canvas id="timeChart"></canvas>
             </div>
           </div>
+
+          <!-- NOTES INCLUDED -->
+          <div class="card notes">
+            <h2>Notes:</h2>
+            <ul>
+              <li><strong>Formula used:</strong></li>
+              <li>CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
+              <li><strong>where:</strong><br>
+                CE = Carbon Emission (tons/year)<br>
+                C = Battery Capacity<br>
+                EF = Black/Brown coal Emission Factor<br>
+                N<sub>years</sub> = Number of years<br>
+                N<sub>batteries</sub> = Number of batteries
+              </li>
+              <li><strong>ROI &amp; Payback formulas:</strong></li>
+              <li>Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
+              <li>Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
+              <li>ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
+              <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
+              <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
+            </ul>
+          </div>
         </div>
 
         <div class="footer-actions">
           <button class="btn-pdf" onclick="savePDFWhite()">Download PDF</button>
+          <div class="fineprint">
+            <span>OptiGrid x Team 55 MIG</span>
+            <span>Exports in a clean white layout</span>
+          </div>
         </div>
       </div>
     </div>
@@ -451,15 +511,15 @@
       return document.getElementById("report").classList.contains("pdfMode");
     }
 
-    // Returns chart styling depending on mode (dark site vs white PDF)
+    // Chart colors: in PDF mode, axis text + axis lines + grid become black/grey
     function getChartColors() {
       if (isPdfMode()) {
         return {
-          tick: "rgba(0,0,0,1)",              // axis numbers = black
-          title: "rgba(0,0,0,1)",             // axis titles = black
-          grid: "rgba(0,0,0,0.12)",           // grid lines = light grey
-          border: "rgba(0,0,0,0.35)",         // axis border = darker grey
-          legend: "rgba(0,0,0,1)"             // legend text = black
+          tick: "rgba(0,0,0,1)",         // axis numbers (black)
+          title: "rgba(0,0,0,1)",        // axis titles (black)
+          grid: "rgba(0,0,0,0.12)",      // grid (light grey)
+          border: "rgba(0,0,0,0.55)",    // axis border (dark grey)
+          legend: "rgba(0,0,0,1)"        // legend text (black)
         };
       }
       return {
@@ -480,11 +540,13 @@
       const timeYears = [5, 10, 15, 20];
       const fixedBatteryForTime = 500;
 
+      // ---- DO NOT CHANGE LOGIC ----
       const blackBatteryData = batteryQuantities.map(b => (capacity * 365 * blackEF / 1000) * b);
       const brownBatteryData = batteryQuantities.map(b => (capacity * 365 * brownEF / 1000) * b);
 
       const blackTimeData = timeYears.map(t => (capacity * 365 * blackEF / 1000) * fixedBatteryForTime * t);
       const brownTimeData = timeYears.map(t => (capacity * 365 * brownEF / 1000) * fixedBatteryForTime * t);
+      // ---- DO NOT CHANGE LOGIC ----
 
       if (window.batteryChartInstance) window.batteryChartInstance.destroy();
       if (window.timeChartInstance) window.timeChartInstance.destroy();
@@ -535,7 +597,7 @@
           labels: batteryQuantities,
           datasets: [
             {
-              label: "OptiGrid",
+              label: "Black Coal",
               data: blackBatteryData,
               borderColor: "rgba(71,176,214,1)",
               pointBackgroundColor: "rgba(71,176,214,1)",
@@ -544,7 +606,7 @@
               tension: 0.2
             },
             {
-              label: "Market Average",
+              label: "Brown Coal",
               data: brownBatteryData,
               borderColor: "rgba(255,122,138,1)",
               pointBackgroundColor: "rgba(255,122,138,1)",
@@ -571,7 +633,7 @@
           labels: timeYears,
           datasets: [
             {
-              label: "OptiGrid",
+              label: "Black Coal",
               data: blackTimeData,
               borderColor: "rgba(71,176,214,1)",
               pointBackgroundColor: "rgba(71,176,214,1)",
@@ -580,7 +642,7 @@
               tension: 0.2
             },
             {
-              label: "Market Average",
+              label: "Brown Coal",
               data: brownTimeData,
               borderColor: "rgba(255,122,138,1)",
               pointBackgroundColor: "rgba(255,122,138,1)",
@@ -605,14 +667,15 @@
       const revenueOptimised = Number(document.getElementById("revenueOptimised").value);
 
       if (cost > 0 && revenueNormal > 0 && revenueOptimised > 0) {
+        // ---- DO NOT CHANGE LOGIC ----
         const paybackNormal = cost / revenueNormal;
         const paybackOptimised = cost / revenueOptimised;
         const roiImprovement = (1 - paybackOptimised / paybackNormal) * 100;
+        // ---- DO NOT CHANGE LOGIC ----
 
         document.getElementById("paybackNormal").innerText = paybackNormal.toFixed(2);
         document.getElementById("paybackOptimised").innerText = paybackOptimised.toFixed(2);
         document.getElementById("roiImprovement").innerText = roiImprovement.toFixed(1);
-
         document.getElementById("roiResults").style.display = "block";
       }
     }
@@ -621,13 +684,11 @@
     function savePDFWhite() {
       const report = document.getElementById("report");
       report.classList.add("pdfMode");
-
-      // Re-render charts so axes/labels become black for PDF
-      calculate();
-
-      setTimeout(() => window.print(), 300);
+      calculate(); // re-render charts for black axes + legend in PDF mode
+      setTimeout(() => window.print(), 350);
     }
 
+    // After print, revert to normal dark site
     window.addEventListener("afterprint", () => {
       const report = document.getElementById("report");
       report.classList.remove("pdfMode");
