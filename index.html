@@ -10,31 +10,22 @@
 
   <style>
     :root{
-      /* Site theme (dark) */
-      --bg: #07121f;
-      --border: rgba(255,255,255,0.12);
-      --text: #e8eef9;
-      --muted: rgba(232,238,249,0.72);
+      /* New investor-friendly theme */
+      --pageBg: #ffffff;
+      --ink: #111827;                 /* dark grey text */
+      --muted: rgba(17,24,39,0.70);
 
-      --card: rgba(255,255,255,0.06);
-      --card2: rgba(255,255,255,0.08);
-
-      --accentBlue: #2b77ff;
-      --teal: #47b0d6;
-      --coral: #ff7a8a;
-
-      --green: #3e8f6a;
-      --greenHover: #347a5a;
+      --brandBlue: #0b2a4a;           /* dark OptiGrid blue */
+      --brandBlue2: #0a2340;          /* slightly darker */
+      --border: rgba(17,24,39,0.16);
+      --soft: #f6f8fc;
 
       --radius: 18px;
-      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --shadow: 0 18px 50px rgba(0,0,0,0.10);
 
-      /* PDF (white) palette */
+      /* PDF palette (force white + black text) */
       --pdfBg: #ffffff;
-      --pdfText: #000000;            /* <- force true black */
-      --pdfMuted: rgba(0,0,0,0.72);
-      --pdfCard: #ffffff;
-      --pdfCard2: #f4f6fb;
+      --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
       --pdfShadow: 0 10px 26px rgba(0,0,0,0.08);
     }
@@ -43,26 +34,22 @@
     body{
       margin: 0;
       font-family: Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 600px at 18% 10%, rgba(43,119,255,0.18), transparent 55%),
-        radial-gradient(900px 500px at 80% 20%, rgba(62,143,106,0.15), transparent 60%),
-        var(--bg);
+      color: var(--ink);
+      background: var(--pageBg);
     }
 
-    /* Top bar (screen only) */
+    /* Top bar */
     .topbar{
       position: sticky;
       top: 0;
       z-index: 20;
-      backdrop-filter: blur(10px);
-      background: rgba(11,26,42,0.78);
-      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--brandBlue), var(--brandBlue2));
+      border-bottom: 1px solid rgba(255,255,255,0.18);
     }
     .topbar-inner{
       max-width: 1120px;
       margin: 0 auto;
-      padding: 14px 18px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -75,26 +62,28 @@
       min-width: 0;
     }
     .brand img{
-      height: 26px;
+      height: 28px;
       width: auto;
       display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
     }
     .brand-text{
       display: grid;
       gap: 2px;
       min-width: 0;
+      color: #fff;
     }
     .brand-text .title{
       font-weight: 900;
-      font-size: 13px;
+      font-size: 14px;
       letter-spacing: 0.2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .brand-text .subtitle{
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.82);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -112,39 +101,45 @@
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      background: #fff;
     }
 
+    /* Report header (same colour as top banner) */
     .report-header{
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 18px 18px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
+      padding: 20px 18px;
+      background: linear-gradient(180deg, var(--brandBlue), var(--brandBlue2));
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
     }
     .report-header img{
-      height: 30px;
+      height: 34px;
       width: auto;
       display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
     }
     .report-header .titles{
       display: grid;
       gap: 6px;
       min-width: 0;
+      width: 100%;
     }
     .report-header .h1{
       margin: 0;
-      font-size: 18px;
+      font-size: 26px;               /* bigger title */
       font-weight: 900;
       letter-spacing: 0.2px;
+      text-align: center;            /* centered */
     }
     .report-header .snippet{
-      margin: 0;
-      font-size: 12.5px;
-      color: rgba(232,238,249,0.86);
-      max-width: 920px;
-      line-height: 1.4;
+      margin: 0 auto;
+      font-size: 14px;               /* slightly bigger */
+      color: rgba(255,255,255,0.90);
+      max-width: 980px;
+      line-height: 1.45;
+      text-align: center;            /* centered */
     }
 
     .content{ padding: 18px; }
@@ -158,22 +153,36 @@
       .grid{ grid-template-columns: 1.05fr 0.95fr; }
     }
 
+    /* Cards */
     .card{
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
-      background: var(--card);
+      background: #fff;
     }
     .card h2{
       margin: 0 0 10px 0;
-      font-size: 15px;
+      font-size: 18px;               /* bigger */
       letter-spacing: 0.2px;
+      text-align: center;            /* centered in box */
+      font-weight: 900;
     }
     .subtext{
       margin: 0 0 14px 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      text-align: center;            /* centered */
     }
+
+    /* Blue calculator section (Inputs + ROI) */
+    .card-blue{
+      background: linear-gradient(180deg, var(--brandBlue), var(--brandBlue2));
+      border-color: rgba(255,255,255,0.18);
+      color: #fff;
+    }
+    .card-blue h2{ color:#fff; }
+    .card-blue .subtext{ color: rgba(255,255,255,0.84); }
 
     .field{ margin-bottom: 12px; }
     label{
@@ -182,27 +191,57 @@
       font-size: 13px;
       margin-bottom: 6px;
     }
+
+    /* Inputs */
     input{
       width: 100%;
       padding: 11px 12px;
       font-size: 15px;
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(17,24,39,0.20);
       border-radius: 12px;
       outline: none;
-      background: rgba(0,0,0,0.16);
-      color: var(--text);
+      background: #ffffff;
+      color: var(--ink);
+    }
+    .card-blue input{
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.98);
+      color: #111827;
     }
 
     .info{
-      background: var(--card2);
-      border: 1px dashed rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      border: 1px dashed rgba(255,255,255,0.25);
       border-radius: 14px;
       padding: 12px;
       font-size: 13px;
-      color: rgba(232,238,249,0.92);
+      color: rgba(255,255,255,0.92);
     }
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
-    .info li{ margin: 6px 0; color: rgba(232,238,249,0.85); }
+    .info li{ margin: 6px 0; color: rgba(255,255,255,0.88); }
+
+    /* ROI results */
+    #roiResults{
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.10);
+    }
+    #roiResults h3{
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      font-weight: 900;
+      text-align: center;
+    }
+    .result-line{
+      margin: 6px 0;
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.92);
+      text-align: center;
+    }
+    .result-line span{ font-weight: 900; }
 
     .actions{
       margin-top: 12px;
@@ -213,7 +252,7 @@
       border: none;
       border-radius: 14px;
       padding: 13px 14px;
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 900;
       cursor: pointer;
       transition: transform 0.05s ease, filter 0.15s ease, background 0.15s ease;
@@ -223,39 +262,20 @@
     button:active{ transform: translateY(1px); }
 
     .btn-update{
-      background: linear-gradient(180deg, rgba(43,119,255,1), rgba(25,90,210,1));
-      box-shadow: 0 10px 24px rgba(43,119,255,0.25);
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+    .btn-update:hover{
+      filter: brightness(1.05);
     }
 
     .btn-pdf{
-      background: linear-gradient(180deg, var(--green), #2f6f52);
-      box-shadow: 0 10px 26px rgba(62,143,106,0.22);
+      background: linear-gradient(180deg, #111827, #0b1220);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
       font-size: 15px;
     }
-    .btn-pdf:hover{
-      background: linear-gradient(180deg, var(--greenHover), #2a6248);
-    }
 
-    #roiResults{
-      display: none;
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.14);
-    }
-    #roiResults h3{
-      margin: 0 0 8px 0;
-      font-size: 14px;
-      font-weight: 900;
-    }
-    .result-line{
-      margin: 6px 0;
-      font-size: 13.5px;
-      color: rgba(232,238,249,0.92);
-    }
-    .result-line span{ font-weight: 900; }
-
+    /* Charts */
     .charts{
       display: grid;
       grid-template-columns: 1fr;
@@ -263,45 +283,100 @@
       margin-top: 16px;
     }
     .chart-title{
-      margin: 0 0 10px 0;
-      font-size: 13px;
+      margin: 0 0 8px 0;
+      font-size: 18px;               /* bigger */
       font-weight: 900;
-      color: rgba(232,238,249,0.95);
+      text-align: center;            /* centered in box */
+      color: var(--ink);
+    }
+    .chart-explain{
+      margin: 0 0 12px 0;
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.45;
+      text-align: center;
     }
     .chart-wrap{
       position: relative;
       width: 100%;
       height: 340px;
+      background: var(--soft);
+      border-radius: 14px;
+      border: 1px solid rgba(17,24,39,0.10);
+      padding: 10px;
     }
-    @media (min-width: 600px){
-      .chart-wrap{ height: 360px; }
-    }
-    @media (min-width: 900px){
-      .chart-wrap{ height: 380px; }
-    }
+    @media (min-width: 600px){ .chart-wrap{ height: 360px; } }
+    @media (min-width: 900px){ .chart-wrap{ height: 380px; } }
     canvas{
       width: 100% !important;
       height: 100% !important;
       display: block;
     }
 
-    .notes h2{
-      margin: 0 0 10px 0;
-      font-size: 15px;
-      letter-spacing: 0.2px;
+    /* Notes dropdown */
+    details.notes{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: #fff;
     }
-    .notes ul{ margin: 0 0 0 18px; padding: 0; }
-    .notes li{ margin: 6px 0; color: rgba(232,238,249,0.85); font-size: 13px; }
+    details.notes summary{
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--ink);
+    }
+    details.notes summary::-webkit-details-marker{ display:none; }
+    .summary-left{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pill{
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid rgba(17,24,39,0.10);
+      color: rgba(17,24,39,0.80);
+    }
+    .chev{
+      width: 12px;
+      height: 12px;
+      border-right: 3px solid rgba(17,24,39,0.70);
+      border-bottom: 3px solid rgba(17,24,39,0.70);
+      transform: rotate(45deg);
+      transition: transform 0.15s ease;
+      margin-left: 8px;
+      flex: 0 0 auto;
+    }
+    details.notes[open] .chev{
+      transform: rotate(-135deg);
+    }
+    .notes-body{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(17,24,39,0.12);
+      color: var(--ink);
+    }
+    .notes-body ul{ margin: 0 0 0 18px; padding: 0; }
+    .notes-body li{ margin: 7px 0; color: rgba(17,24,39,0.88); font-size: 13.5px; }
 
     .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(17,24,39,0.12);
     }
     .fineprint{
       margin-top: 10px;
       font-size: 12px;
-      color: rgba(232,238,249,0.62);
+      color: rgba(17,24,39,0.62);
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -315,47 +390,49 @@
       background: var(--pdfBg) !important;
       border-color: var(--pdfBorder) !important;
       box-shadow: var(--pdfShadow) !important;
-      color: var(--pdfText) !important; /* <- everything inside defaults to black */
+      color: var(--pdfText) !important;
     }
-
-    /* Force all text-like elements to black */
     #report.pdfMode,
     #report.pdfMode *{
       color: var(--pdfText) !important;
     }
-
-    /* Re-allow only subtle muted for helper text if you want (still black-ish) */
-    #report.pdfMode .subtext,
-    #report.pdfMode .snippet,
-    #report.pdfMode .fineprint,
-    #report.pdfMode .notes li,
-    #report.pdfMode .info li{
-      color: var(--pdfText) !important; /* user asked ALL text black */
-    }
-
-    /* White card surfaces */
     #report.pdfMode .report-header{
       background: #ffffff !important;
       border-bottom-color: var(--pdfBorder) !important;
     }
-    #report.pdfMode .card{
-      background: var(--pdfCard) !important;
+    #report.pdfMode .report-header .snippet{
+      color: var(--pdfText) !important;
+    }
+    #report.pdfMode .card,
+    #report.pdfMode details.notes{
+      background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
-    #report.pdfMode .info{
-      background: var(--pdfCard2) !important;
+    #report.pdfMode .card-blue{
+      background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
+    #report.pdfMode .info,
     #report.pdfMode #roiResults{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
     }
-
-    /* Inputs look like a normal document */
     #report.pdfMode input{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
       box-shadow: none !important;
+    }
+    #report.pdfMode .chart-wrap{
+      background: #ffffff !important;
+      border-color: var(--pdfBorder) !important;
+    }
+    #report.pdfMode .pill{
+      background: #ffffff !important;
+      border-color: var(--pdfBorder) !important;
+    }
+    #report.pdfMode .btn-update,
+    #report.pdfMode .btn-pdf{
+      display: none !important; /* hide buttons in PDF */
     }
 
     /* Print rules */
@@ -368,9 +445,8 @@
       .topbar{ display:none !important; }
       .page{ padding:0 !important; max-width:none !important; }
       #report{ border-radius:0 !important; box-shadow:none !important; }
-      .btn-pdf{ display:none !important; } /* hide button in PDF */
       /* Avoid awkward splits */
-      .card, .report-header, .chart-wrap { break-inside: avoid !important; page-break-inside: avoid !important; }
+      .card, .report-header, .chart-wrap, details.notes { break-inside: avoid !important; page-break-inside: avoid !important; }
     }
   </style>
 </head>
@@ -394,19 +470,22 @@
       <div class="report-header">
         <img alt="OptiGrid logo" src="https://optigrid.energy/logos/logo.webp" />
         <div class="titles">
-          <p class="h1">CO₂ Offset Calculator</p>
+          <p class="h1">CO₂ Offset & ROI Calculator</p>
           <p class="snippet">
-            This calculator provides an indicative view of emissions offset and payback outcomes for grid-connected battery deployment.
-            It is designed to compare scenarios across different battery quantities and time horizons using the inputs and fixed factors shown.
+            A simple investor-facing view of how grid-connected batteries can (1) offset emissions under coal-based generation factors,
+            and (2) improve payback under different annual revenue scenarios.
           </p>
         </div>
       </div>
 
       <div class="content">
         <div class="grid">
-          <div class="card">
+          <!-- INPUTS -->
+          <div class="card card-blue">
             <h2>Inputs</h2>
-            <p class="subtext">Update the figures below to model different scenarios.</p>
+            <p class="subtext">
+              What this is: the key assumption that drives the emissions model (battery capacity). Change this to test different battery sizes.
+            </p>
 
             <div class="field">
               <label>Battery Capacity (MWh per battery)</label>
@@ -415,17 +494,24 @@
 
             <div class="info">
               <div><strong>Battery quantities analysed:</strong> 1, 250, 500, 750, 1000 batteries</div>
-              <div style="margin-top:8px;"><strong>Fixed Emission Factors:</strong></div>
+              <div style="margin-top:8px;"><strong>Fixed Emission Factors used for comparison:</strong></div>
               <ul>
                 <li>Brown Coal: 336.6 kg CO₂/MWh</li>
                 <li>Black Coal: 324 kg CO₂/MWh</li>
               </ul>
+              <div style="margin-top:8px;">
+                <strong>How to read:</strong> Higher capacity and more batteries increases the potential emissions offset shown in the charts.
+              </div>
             </div>
           </div>
 
-          <div class="card">
+          <!-- ROI -->
+          <div class="card card-blue">
             <h2>ROI Calculator</h2>
-            <p class="subtext">After updating figures, press <strong>Update</strong>.</p>
+            <p class="subtext">
+              What this is: a payback comparison between “normal” operation vs an “optimised” operation scenario (higher annual revenue).
+              Click <strong>Update</strong> after changing values.
+            </p>
 
             <div class="field">
               <label>Project Cost ($)</label>
@@ -447,7 +533,7 @@
             </div>
 
             <div id="roiResults">
-              <h3>ROI & Payback Analysis</h3>
+              <h3>ROI & Payback Summary</h3>
               <div class="result-line"><strong>Normal Payback Period:</strong> <span id="paybackNormal"></span> years</div>
               <div class="result-line"><strong>Optimised Payback Period:</strong> <span id="paybackOptimised"></span> years</div>
               <div class="result-line"><strong>ROI Improvement:</strong> <span id="roiImprovement"></span> %</div>
@@ -455,42 +541,59 @@
           </div>
         </div>
 
+        <!-- CHARTS -->
         <div class="charts">
           <div class="card">
-            <p class="chart-title">Decarbonisation vs Number of Batteries</p>
+            <p class="chart-title">Emissions Offset vs Number of Batteries</p>
+            <p class="chart-explain">
+              What this shows: the estimated annual emissions offset (tonnes/year) as the battery fleet scales up.
+              The two lines compare offset under <strong>Black Coal</strong> vs <strong>Brown Coal</strong> emission factors.
+            </p>
             <div class="chart-wrap">
               <canvas id="batteryChart"></canvas>
             </div>
           </div>
 
           <div class="card">
-            <p class="chart-title">Decarbonisation vs Time (Years) for 500 Batteries</p>
+            <p class="chart-title">Emissions Offset vs Time (500 Batteries)</p>
+            <p class="chart-explain">
+              What this shows: how emissions offset accumulates over time when deploying <strong>500 batteries</strong>.
+              Use this to communicate longer-term impact (5–20 years).
+            </p>
             <div class="chart-wrap">
               <canvas id="timeChart"></canvas>
             </div>
           </div>
 
-          <!-- NOTES INCLUDED -->
-          <div class="card notes">
-            <h2>Notes:</h2>
-            <ul>
-              <li><strong>Formula used:</strong></li>
-              <li>CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
-              <li><strong>where:</strong><br>
-                CE = Carbon Emission (tons/year)<br>
-                C = Battery Capacity<br>
-                EF = Black/Brown coal Emission Factor<br>
-                N<sub>years</sub> = Number of years<br>
-                N<sub>batteries</sub> = Number of batteries
-              </li>
-              <li><strong>ROI &amp; Payback formulas:</strong></li>
-              <li>Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
-              <li>Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
-              <li>ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
-              <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
-              <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
-            </ul>
-          </div>
+          <!-- NOTES DROPDOWN -->
+          <details class="notes">
+            <summary>
+              <span class="summary-left">
+                Notes & Assumptions
+                <span class="pill">More info</span>
+              </span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="notes-body">
+              <ul>
+                <li><strong>Formula used:</strong></li>
+                <li>CE = (C × 365 × EF × N<sub>years</sub> × N<sub>batteries</sub>) / 1000</li>
+                <li><strong>where:</strong><br>
+                  CE = Carbon Emission (tons/year)<br>
+                  C = Battery Capacity<br>
+                  EF = Black/Brown coal Emission Factor<br>
+                  N<sub>years</sub> = Number of years<br>
+                  N<sub>batteries</sub> = Number of batteries
+                </li>
+                <li><strong>ROI &amp; Payback formulas:</strong></li>
+                <li>Payback<sub>Normal</sub> = Project Cost / Annual Revenue<sub>Normal</sub></li>
+                <li>Payback<sub>Optimised</sub> = Project Cost / Annual Revenue<sub>Optimised</sub></li>
+                <li>ROI Improvement (%) = (1 − Payback<sub>Optimised</sub> / Payback<sub>Normal</sub>) × 100</li>
+                <li>Calculation is based on Tesla Megapack with a lifespan of 20 years.</li>
+                <li>Calculation does not account for emissions from transport, manufacturing, or battery degradation.</li>
+              </ul>
+            </div>
+          </details>
         </div>
 
         <div class="footer-actions">
@@ -512,22 +615,23 @@
     }
 
     // Chart colors: in PDF mode, axis text + axis lines + grid become black/grey
+    // In normal (white) mode, keep dark grey axes for readability.
     function getChartColors() {
       if (isPdfMode()) {
         return {
-          tick: "rgba(0,0,0,1)",         // axis numbers (black)
-          title: "rgba(0,0,0,1)",        // axis titles (black)
-          grid: "rgba(0,0,0,0.12)",      // grid (light grey)
-          border: "rgba(0,0,0,0.55)",    // axis border (dark grey)
-          legend: "rgba(0,0,0,1)"        // legend text (black)
+          tick: "rgba(0,0,0,1)",
+          title: "rgba(0,0,0,1)",
+          grid: "rgba(0,0,0,0.12)",
+          border: "rgba(0,0,0,0.55)",
+          legend: "rgba(0,0,0,1)"
         };
       }
       return {
-        tick: "rgba(232,238,249,0.85)",
-        title: "rgba(232,238,249,0.9)",
-        grid: "rgba(255,255,255,0.08)",
-        border: "rgba(255,255,255,0.12)",
-        legend: "rgba(232,238,249,0.9)"
+        tick: "rgba(17,24,39,0.85)",      // dark grey
+        title: "rgba(17,24,39,0.95)",
+        grid: "rgba(17,24,39,0.10)",
+        border: "rgba(17,24,39,0.35)",
+        legend: "rgba(17,24,39,0.90)"
       };
     }
 
@@ -621,7 +725,7 @@
           scales: {
             ...commonOptions.scales,
             x: { ...commonOptions.scales.x, title: { ...commonOptions.scales.x.title, text: "Number of Batteries" } },
-            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Decarbonisation (tonnes/year)" } }
+            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Emissions Offset (tonnes/year)" } }
           }
         }
       });
@@ -657,7 +761,7 @@
           scales: {
             ...commonOptions.scales,
             x: { ...commonOptions.scales.x, title: { ...commonOptions.scales.x.title, text: "Time (Years)" } },
-            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Decarbonisation (tonnes)" } }
+            y: { ...commonOptions.scales.y, title: { ...commonOptions.scales.y.title, text: "Emissions Offset (tonnes)" } }
           }
         }
       });
@@ -680,15 +784,15 @@
       }
     }
 
-    // White PDF export: apply pdfMode + re-render charts with black axes + print
+    // PDF export: force pdfMode + re-render charts with black axes + print
     function savePDFWhite() {
       const report = document.getElementById("report");
       report.classList.add("pdfMode");
-      calculate(); // re-render charts for black axes + legend in PDF mode
+      calculate();
       setTimeout(() => window.print(), 350);
     }
 
-    // After print, revert to normal dark site
+    // After print, revert to normal styling
     window.addEventListener("afterprint", () => {
       const report = document.getElementById("report");
       report.classList.remove("pdfMode");
