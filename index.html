@@ -10,37 +10,39 @@
 
   <style>
     :root{
-      /* Page */
-      --pageBg: #ffffff;
-
-      /* Brand + text */
-      --brandBlue: #0b2a4a;
+      /* ====== BRAND BLUES (keep consistent) ====== */
+      --brandBlue:  #0b2a4a;   /* top banner blue */
       --brandBlue2: #0a2340;
 
-      --ink: #111827;
-      --muted: rgba(17,24,39,0.70);
+      --deepBlue:   #071c33;  /* report body blue */
+      --deepBlue2:  #06162a;
 
-      /* Glass */
-      --glassBg: rgba(255,255,255,0.12);
-      --glassBg2: rgba(255,255,255,0.18);
-      --glassBorder: rgba(255,255,255,0.22);
+      /* ====== TEXT ====== */
+      --textOnBlue: #ffffff;
+      --mutedOnBlue: rgba(255,255,255,0.82);
 
-      --darkGlassBg: rgba(11,42,74,0.38);
-      --darkGlassBg2: rgba(11,42,74,0.26);
-      --darkGlassBorder: rgba(255,255,255,0.18);
+      /* ====== PAGE (outermost background = liquid glass) ====== */
+      --pageBg: #ffffff;
+      --pageGlass1: rgba(11,42,74,0.10);
+      --pageGlass2: rgba(245,158,11,0.08);
+      --pageGlass3: rgba(22,163,74,0.07);
 
-      --soft: #f6f8fc;
+      /* ====== PANELS ON BLUE ====== */
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.10);
+      --borderOnBlue: rgba(255,255,255,0.18);
+
       --radius: 18px;
-      --shadow: 0 18px 50px rgba(0,0,0,0.10);
+      --shadow: 0 18px 50px rgba(0,0,0,0.25);
 
-      /* Buttons */
+      /* ====== BUTTONS (liquid glass only) ====== */
       --orange: #f59e0b;
-      --orangeHover: #d97706;
+      --orange2:#d97706;
 
-      --green: #16a34a;
-      --greenHover: #15803d;
+      --green:  #16a34a;
+      --green2: #15803d;
 
-      /* PDF palette */
+      /* ====== PDF ====== */
       --pdfBg: #ffffff;
       --pdfText: #000000;
       --pdfBorder: rgba(0,0,0,0.18);
@@ -48,18 +50,20 @@
     }
 
     * { box-sizing: border-box; }
+
+    /* Outermost background = liquid glass look */
     body{
       margin: 0;
       font-family: Arial, sans-serif;
-      color: var(--ink);
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(11,42,74,0.10), transparent 55%),
-        radial-gradient(900px 520px at 85% 15%, rgba(245,158,11,0.08), transparent 58%),
-        radial-gradient(900px 520px at 70% 80%, rgba(22,163,74,0.07), transparent 55%),
+        radial-gradient(1200px 700px at 15% 10%, var(--pageGlass1), transparent 55%),
+        radial-gradient(900px 520px at 85% 15%, var(--pageGlass2), transparent 58%),
+        radial-gradient(900px 520px at 70% 80%, var(--pageGlass3), transparent 55%),
         var(--pageBg);
+      color: #111827;
     }
 
-    /* Top bar */
+    /* Top bar stays the same blue */
     .topbar{
       position: sticky;
       top: 0;
@@ -116,18 +120,17 @@
       padding: 18px 18px 56px;
     }
 
-    /* Report container (glass, clean) */
+    /* ✅ The main card stays BLUE (not grey) */
     #report{
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(17,24,39,0.12);
-      background: rgba(255,255,255,0.55);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, var(--deepBlue), var(--deepBlue2));
+      color: var(--textOnBlue);
     }
 
-    /* Header (blue) */
+    /* Header stays the same blue */
     .report-header{
       display: flex;
       align-items: center;
@@ -163,7 +166,11 @@
       text-align: center;
     }
 
-    .content{ padding: 18px; }
+    /* Content area stays BLUE */
+    .content{
+      padding: 18px;
+      color: var(--textOnBlue);
+    }
 
     .grid{
       display: grid;
@@ -174,41 +181,31 @@
       .grid{ grid-template-columns: 1.05fr 0.95fr; }
     }
 
-    /* Glass cards */
+    /* Panels on blue (clean + subtle glass feel inside card) */
     .card{
+      border: 1px solid var(--borderOnBlue);
       border-radius: 16px;
       padding: 16px;
-      border: 1px solid rgba(17,24,39,0.12);
-      background: rgba(255,255,255,0.60);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.06);
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
+
     .card h2{
       margin: 0 0 10px 0;
       font-size: 18px;
       text-align: center;
       font-weight: 900;
-    }
-    .subtext{
-      margin: 0 0 14px 0;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.5;
-      text-align: center;
+      color: rgba(255,255,255,0.96);
     }
 
-    /* Dark glass for calculator panels */
-    .card-blue{
-      color: #fff;
-      border: 1px solid var(--darkGlassBorder);
-      background: linear-gradient(180deg, var(--darkGlassBg), var(--darkGlassBg2));
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 18px 44px rgba(0,0,0,0.18);
+    .subtext{
+      margin: 0 0 14px 0;
+      color: var(--mutedOnBlue);
+      font-size: 13.5px;
+      line-height: 1.55;
+      text-align: center;
     }
-    .card-blue h2{ color:#fff; }
-    .card-blue .subtext{ color: rgba(255,255,255,0.84); }
 
     .field{ margin-bottom: 12px; }
     label{
@@ -216,23 +213,19 @@
       font-weight: 800;
       font-size: 13px;
       margin-bottom: 6px;
+      color: rgba(255,255,255,0.92);
     }
-    .card-blue label{ color: rgba(255,255,255,0.92); }
 
-    /* Inputs */
+    /* Inputs stay white for readability */
     input{
       width: 100%;
       padding: 11px 12px;
       font-size: 15px;
       border-radius: 12px;
       outline: none;
-      border: 1px solid rgba(17,24,39,0.18);
-      background: rgba(255,255,255,0.92);
-      color: #111827;
-    }
-    .card-blue input{
       border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.94);
+      background: rgba(255,255,255,0.95);
+      color: #111827;
     }
 
     .hint{
@@ -242,24 +235,58 @@
     }
 
     .info{
-      background: rgba(255,255,255,0.10);
+      background: var(--panel2);
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 14px;
       padding: 12px;
       font-size: 13px;
       color: rgba(255,255,255,0.92);
+      line-height: 1.5;
     }
     .info ul{ margin: 8px 0 0 18px; padding: 0; }
     .info li{ margin: 6px 0; color: rgba(255,255,255,0.88); }
 
-    /* ROI results */
+    .actions{
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    /* ✅ Buttons = liquid glass */
+    button{
+      width: 100%;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.20);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 16px 34px rgba(0,0,0,0.18);
+      transition: transform 0.05s ease, filter 0.15s ease;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .btn-update{
+      background: linear-gradient(180deg, rgba(245,158,11,0.92), rgba(217,119,6,0.86));
+    }
+    .btn-update:hover{ filter: brightness(1.04); }
+
+    .btn-pdf{
+      background: linear-gradient(180deg, rgba(22,163,74,0.92), rgba(21,128,61,0.86));
+    }
+    .btn-pdf:hover{ filter: brightness(1.04); }
+
+    /* ROI results (numbers green) */
     #roiResults{
       display: none;
       margin-top: 12px;
       padding: 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.08);
     }
     #roiResults h3{
       margin: 0 0 8px 0;
@@ -280,38 +307,6 @@
       color: var(--green);
     }
 
-    /* Buttons (glass) */
-    .actions{ margin-top: 12px; display: grid; gap: 10px; }
-
-    button{
-      border: 1px solid rgba(255,255,255,0.20);
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-size: 15px;
-      font-weight: 900;
-      cursor: pointer;
-      width: 100%;
-      color: #fff;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: transform 0.05s ease, filter 0.15s ease;
-    }
-    button:active{ transform: translateY(1px); }
-
-    /* Orange update (glassy) */
-    .btn-update{
-      background: linear-gradient(180deg, rgba(245,158,11,0.90), rgba(217,119,6,0.85));
-      box-shadow: 0 16px 34px rgba(245,158,11,0.22);
-    }
-    .btn-update:hover{ filter: brightness(1.04); }
-
-    /* Green PDF (glassy) */
-    .btn-pdf{
-      background: linear-gradient(180deg, rgba(22,163,74,0.92), rgba(21,128,61,0.86));
-      box-shadow: 0 16px 34px rgba(22,163,74,0.20);
-    }
-    .btn-pdf:hover{ filter: brightness(1.04); }
-
     /* Charts */
     .charts{
       display: grid;
@@ -324,24 +319,25 @@
       font-size: 18px;
       font-weight: 900;
       text-align: center;
+      color: rgba(255,255,255,0.96);
     }
     .chart-explain{
       margin: 0 0 12px 0;
       font-size: 13.5px;
-      color: var(--muted);
-      line-height: 1.5;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.55;
       text-align: center;
     }
     .chart-wrap{
       position: relative;
       width: 100%;
       height: 340px;
-      background: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.06);
       border-radius: 14px;
-      border: 1px solid rgba(17,24,39,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 10px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      padding: 10px;
     }
     @media (min-width: 600px){ .chart-wrap{ height: 360px; } }
     @media (min-width: 900px){ .chart-wrap{ height: 380px; } }
@@ -349,12 +345,12 @@
 
     /* Notes dropdown */
     details.notes{
-      border: 1px solid rgba(17,24,39,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: 16px;
       padding: 12px 14px;
-      background: rgba(255,255,255,0.55);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     details.notes summary{
       cursor: pointer;
@@ -365,7 +361,7 @@
       gap: 10px;
       font-weight: 900;
       font-size: 16px;
-      color: #111827;
+      color: rgba(255,255,255,0.95);
     }
     details.notes summary::-webkit-details-marker{ display:none; }
 
@@ -375,14 +371,14 @@
       font-weight: 900;
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.70);
-      border: 1px solid rgba(17,24,39,0.10);
-      color: rgba(17,24,39,0.80);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.88);
     }
     .chev{
       width: 12px; height: 12px;
-      border-right: 3px solid rgba(17,24,39,0.70);
-      border-bottom: 3px solid rgba(17,24,39,0.70);
+      border-right: 3px solid rgba(255,255,255,0.80);
+      border-bottom: 3px solid rgba(255,255,255,0.80);
       transform: rotate(45deg);
       transition: transform 0.15s ease;
       margin-left: 8px;
@@ -393,30 +389,30 @@
     .notes-body{
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid rgba(17,24,39,0.12);
-      color: rgba(17,24,39,0.88);
+      border-top: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.90);
     }
     .notes-body ul{ margin: 0 0 0 18px; padding: 0; }
-    .notes-body li{ margin: 7px 0; font-size: 13.5px; }
+    .notes-body li{ margin: 7px 0; font-size: 13.5px; color: rgba(255,255,255,0.88); }
 
     .footer-actions{
       margin-top: 18px;
       padding-top: 16px;
-      border-top: 1px solid rgba(17,24,39,0.10);
+      border-top: 1px solid rgba(255,255,255,0.14);
     }
     .fineprint{
       margin-top: 10px;
       font-size: 12px;
-      color: rgba(17,24,39,0.62);
+      color: rgba(255,255,255,0.70);
       display: flex;
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    /* ---------------------------------------------------
-       PDF MODE: FORCE WHITE BACKGROUND + BLACK TEXT (ALL)
-       --------------------------------------------------- */
+    /* ===================================================
+       PDF MODE: WHITE BACKGROUND + BLACK TEXT (ALL)
+       =================================================== */
     #report.pdfMode{
       background: var(--pdfBg) !important;
       border-color: var(--pdfBorder) !important;
@@ -438,13 +434,9 @@
     #report.pdfMode details.notes{
       background: #ffffff !important;
       border-color: var(--pdfBorder) !important;
-      box-shadow: none !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-    }
-    #report.pdfMode .card-blue{
-      background: #ffffff !important;
-      border-color: var(--pdfBorder) !important;
+      box-shadow: none !important;
     }
     #report.pdfMode .info,
     #report.pdfMode #roiResults,
@@ -459,6 +451,7 @@
       border-color: var(--pdfBorder) !important;
       box-shadow: none !important;
     }
+    /* Hide buttons in PDF (as before) */
     #report.pdfMode .btn-update,
     #report.pdfMode .btn-pdf{
       display: none !important;
@@ -473,7 +466,10 @@
       .topbar{ display:none !important; }
       .page{ padding:0 !important; max-width:none !important; }
       #report{ border-radius:0 !important; box-shadow:none !important; }
-      .card, .report-header, .chart-wrap, details.notes { break-inside: avoid !important; page-break-inside: avoid !important; }
+      .card, .report-header, .chart-wrap, details.notes {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
     }
   </style>
 </head>
@@ -499,8 +495,8 @@
         <div class="titles">
           <p class="h1">CO₂ Offset & ROI Calculator</p>
           <p class="snippet">
-            This tool gives an <strong>indicative</strong> view of (1) emissions offset and (2) simple payback.
-            Enter values below, then press <strong>Update</strong> to refresh the charts and summary.
+            Enter your numbers, then press <strong>Update</strong>.
+            You’ll get an indicative view of emissions offset and a simple payback comparison (Normal vs Optimised).
           </p>
         </div>
       </div>
@@ -508,11 +504,11 @@
       <div class="content">
         <div class="grid">
           <!-- INPUTS -->
-          <div class="card card-blue">
+          <div class="card">
             <h2>Inputs</h2>
             <p class="subtext">
-              <strong>What you’re setting:</strong> the battery size (capacity) for one unit.
-              A larger capacity means more energy can be shifted, which increases the estimated offset in the charts.
+              Set the <strong>capacity</strong> (MWh) for one battery unit.
+              A larger capacity usually means the system can shift more energy each day, which increases the estimated offset shown in the charts.
             </p>
 
             <div class="field">
@@ -522,24 +518,24 @@
             </div>
 
             <div class="info">
-              <div><strong>What we compare:</strong> results are shown for 1, 250, 500, 750, and 1000 batteries.</div>
-              <div style="margin-top:8px;"><strong>Coal factors used (for comparison only):</strong></div>
+              <div><strong>What you’ll see:</strong> results for 1, 250, 500, 750, and 1000 batteries.</div>
+              <div style="margin-top:8px;"><strong>Comparison factors (for context only):</strong></div>
               <ul>
                 <li>Brown Coal: 336.6 kg CO₂/MWh</li>
                 <li>Black Coal: 324 kg CO₂/MWh</li>
               </ul>
               <div style="margin-top:8px;">
-                <strong>Simple takeaway:</strong> bigger batteries and more units generally means a larger offset.
+                <strong>Simple takeaway:</strong> higher capacity and more batteries generally leads to a larger estimated offset.
               </div>
             </div>
           </div>
 
           <!-- ROI -->
-          <div class="card card-blue">
+          <div class="card">
             <h2>ROI Calculator</h2>
             <p class="subtext">
-              <strong>What this measures:</strong> how long it takes to “pay back” the project cost using yearly revenue.
-              “Optimised” is a higher-revenue scenario (for example: better dispatch, higher utilisation, or improved pricing).
+              This estimates <strong>how many years</strong> it takes for revenue to cover the project cost (payback).
+              “Optimised” represents a higher-revenue scenario (e.g., better dispatch, higher utilisation, or improved pricing).
             </p>
 
             <div class="field">
@@ -573,13 +569,12 @@
           </div>
         </div>
 
-        <!-- CHARTS -->
         <div class="charts">
           <div class="card">
             <p class="chart-title">Emissions Offset vs Number of Batteries</p>
             <p class="chart-explain">
-              This chart shows the <strong>estimated yearly offset</strong> as the number of batteries increases.
-              It helps explain “scale”: more batteries usually means more total impact.
+              Shows the <strong>estimated yearly offset</strong> as you increase battery count.
+              Use this to explain scale: more batteries usually means more total impact.
             </p>
             <div class="chart-wrap">
               <canvas id="batteryChart"></canvas>
@@ -589,15 +584,14 @@
           <div class="card">
             <p class="chart-title">Emissions Offset over Time (500 Batteries)</p>
             <p class="chart-explain">
-              This chart shows how the offset <strong>adds up over time</strong> (5–20 years) if you deployed 500 batteries.
-              It helps communicate longer-term impact, not just the first year.
+              Shows how offset can <strong>accumulate over time</strong> (5–20 years) with 500 batteries.
+              This helps communicate longer-term outcomes, not just year one.
             </p>
             <div class="chart-wrap">
               <canvas id="timeChart"></canvas>
             </div>
           </div>
 
-          <!-- NOTES DROPDOWN -->
           <details class="notes">
             <summary>
               <span class="summary-left">
@@ -662,7 +656,7 @@
       return document.getElementById("report").classList.contains("pdfMode");
     }
 
-    // Clean axes on-screen; force black for PDF
+    // On-screen (blue background) -> light axes; PDF -> black axes
     function getChartColors() {
       if (isPdfMode()) {
         return {
@@ -674,11 +668,11 @@
         };
       }
       return {
-        tick: "rgba(17,24,39,0.85)",
-        title: "rgba(17,24,39,0.95)",
-        grid: "rgba(17,24,39,0.10)",
-        border: "rgba(17,24,39,0.35)",
-        legend: "rgba(17,24,39,0.90)"
+        tick: "rgba(255,255,255,0.88)",
+        title: "rgba(255,255,255,0.95)",
+        grid: "rgba(255,255,255,0.10)",
+        border: "rgba(255,255,255,0.22)",
+        legend: "rgba(255,255,255,0.92)"
       };
     }
 
